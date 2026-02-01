@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Quantum Flow Ultimate | High-Frequency Terminal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0099ff", /* Electric Blue */
+                        "primary-dim": "rgba(0, 153, 255, 0.1)",
+                        "background-light": "#f2f2f3",
+                        "background-dark": "#050508", /* Void Black */
+                        "obsidian": "#0D0D10",
+                        "success": "#0bda5b",
+                        "alert": "#ff3366"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scan': 'scan 6s linear infinite',
+                        'blink': 'blink 1s step-end infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        },
+                        blink: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #050508;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .bento-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .bento-border-active {
+            border: 1px solid rgba(0, 153, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 153, 255, 0.2);
+        }
+        
+        .glass-panel {
+            background: rgba(13, 13, 16, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 153, 255, 0.7);
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 153, 255, 0.03) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9000;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #0099ff; border-radius: 2px; }
+
+        /* Loader */
+        #loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background-color: #050508;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        #loader.hidden { opacity: 0; visibility: hidden; }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .menu-open { transform: translateX(0) !important; }
+        
+        ::selection { background: #0099ff; color: #000; }
+    </style>
+</head>
+<body class="bg-background-dark text-white font-display">
+
+    <!-- Scanline Effect Overlay -->
+    <div class="scanline"></div>
+
+    <!-- System Boot Loader -->
+    <div id="loader">
+        <div class="flex flex-col items-center gap-4 w-64">
+            <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-primary animate-[scan_2s_ease-in-out_infinite]" style="width: 100%; animation: width 2s ease-in-out infinite;"></div>
+            </div>
+            <div class="flex justify-between w-full text-[10px] font-mono text-primary">
+                <span>INITIALIZING CORE</span>
+                <span class="animate-pulse">99%</span>
+            </div>
+            <div class="text-[9px] text-white/30 font-mono mt-2">
+                &gt; MOUNTING_VOLUMES... OK<br>
+                &gt; ESTABLISHING_LINK... OK
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 bg-background-dark/80 backdrop-blur-md border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="text-primary animate-pulse-fast">
+                    <span class="material-symbols-outlined text-2xl">deployed_code</span>
+                </div>
+                <h2 class="text-lg font-bold tracking-tighter uppercase italic">Quantum<span class="text-primary">Flow</span></h2>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 hover:text-primary transition-colors hover:glow-text" href="#terminal">Terminal</a>
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 hover:text-primary transition-colors hover:glow-text" href="#network">Network</a>
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 hover:text-primary transition-colors hover:glow-text" href="#liquidity">Liquidity</a>
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 hover:text-primary transition-colors hover:glow-text" href="#access">Access</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 text-[10px] font-mono text-success">
+                    <span class="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
+                    SYSTEM_OPTIMAL
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-primary hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">terminal</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 z-[40] bg-background-dark/95 backdrop-blur-xl transform translate-x-full flex flex-col items-center justify-center border-l border-primary/20">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <div class="flex flex-col gap-8 text-center font-mono w-full px-12">
+            <div class="text-[10px] text-white/30 uppercase tracking-widest border-b border-white/10 pb-2 mb-4 text-left">Directory_Map</div>
+            <a class="text-2xl text-white hover:text-primary hover:bg-primary/10 py-3 block border-l-2 border-transparent hover:border-primary transition-all text-left pl-4" href="#terminal" onclick="toggleMenu()">&gt; /TERMINAL</a>
+            <a class="text-2xl text-white hover:text-primary hover:bg-primary/10 py-3 block border-l-2 border-transparent hover:border-primary transition-all text-left pl-4" href="#network" onclick="toggleMenu()">&gt; /NETWORK_NODES</a>
+            <a class="text-2xl text-white hover:text-primary hover:bg-primary/10 py-3 block border-l-2 border-transparent hover:border-primary transition-all text-left pl-4" href="#liquidity" onclick="toggleMenu()">&gt; /LIQUIDITY_POOLS</a>
+            <a class="text-2xl text-primary hover:text-white hover:bg-primary/10 py-3 block border-l-2 border-transparent hover:border-white transition-all text-left pl-4" href="#access" onclick="toggleMenu()">&gt; /EXECUTE_ACCESS</a>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="pt-20 pb-20 px-4 lg:px-6 max-w-[1440px] mx-auto space-y-24">
+        
+        <!-- Hero Section (Bento Grid) -->
+        <main id="terminal" class="grid grid-cols-12 grid-rows-6 gap-4 min-h-[80vh]">
+            <!-- Hero Title Panel -->
+            <div class="col-span-12 lg:col-span-8 row-span-4 bento-border glass-panel p-8 lg:p-12 flex flex-col justify-end relative overflow-hidden group hover:bento-border-active transition-all duration-500" data-aos="fade-right">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5"></div>
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                    <span class="text-[120px] font-black leading-none select-none italic tracking-tighter text-white">QF-01</span>
+                </div>
+                <div class="relative z-10 max-w-2xl">
+                    <div class="flex items-center gap-2 mb-6 text-primary font-mono text-xs">
+                        <span class="w-2 h-2 bg-primary animate-pulse"></span>
+                        <span class="tracking-widest uppercase">&gt; STATUS: OPERATING AT EDGE</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tighter mb-8 uppercase">
+                        The Edge of <span class="text-primary italic">Efficiency</span>.<br> Defined by <span class="glow-text">Quantum.</span>
+                    </h1>
+                    <p class="text-gray-400 text-lg max-w-md font-light leading-relaxed mb-10">
+                        A surgical financial terminal for high-performance capital management. Command your data with quantum-grade precision.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="document.getElementById('access').scrollIntoView()" class="h-12 px-8 bg-primary hover:bg-white hover:text-primary text-black font-bold uppercase tracking-widest text-xs flex items-center gap-2 transition-all clip-corner">
+                            Initialize Terminal
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                        <button class="h-12 px-8 border border-white/10 hover:border-primary/50 text-white font-bold uppercase tracking-widest text-xs flex items-center gap-2 transition-all font-mono">
+                            ./view_docs
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Sphere Panel -->
+            <div class="col-span-12 lg:col-span-4 row-span-4 bento-border glass-panel overflow-hidden relative group hover:bento-border-active transition-all duration-500" data-aos="fade-left">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-64 h-64 rounded-full border border-primary/20 flex items-center justify-center relative animate-[spin_30s_linear_infinite]">
+                        <div class="absolute inset-2 border border-white/5 rounded-full"></div>
+                        <div class="absolute inset-8 border border-primary/10 rounded-full animate-[pulse_4s_ease-in-out_infinite]"></div>
+                        <div class="w-full h-full bg-center bg-no-repeat bg-contain opacity-80 mix-blend-screen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgmAQosKWcP6Qn7V9B3YnBvMYikJT2vaGcDwaVg_zPrGzCJmBukBDgFPSPfKt6cLn9Xp8yVmhL1qWLw3rvnvOYz7H74qngdivkFcPFyDUXTmZJNT_ylAGU94wgJo72DdCeD3K8JnxhvjhLeHX1pJ-Yuy2BIKgopNd3wD5wRpkpr3vvekh6HAZPOG-SCjkWUi2TZ-wQ4JjDqJCc_nH71h0QgieOVCUd_wXujNm7pLUkh6RACKhLCBbx-XYoIS13LEKQnERjm7pCfrA");'></div>
+                    </div>
+                </div>
+                <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end font-mono">
+                    <div>
+                        <p class="text-[9px] font-bold tracking-widest text-primary uppercase mb-1">Quantum Core</p>
+                        <p class="text-xl font-bold tabular-nums text-white">842.12 <span class="text-xs text-white/40">FPS</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold tracking-widest text-white/40 uppercase mb-1">Latency</p>
+                        <p class="text-xl font-bold tabular-nums text-success">0.02 <span class="text-xs text-white/40">MS</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Throughput Metric -->
+            <div class="col-span-6 lg:col-span-3 row-span-2 bento-border glass-panel p-6 flex flex-col justify-between hover:bg-white/5 transition-colors" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex justify-between items-start">
+                    <span class="material-symbols-outlined text-primary">speed</span>
+                    <span class="text-[9px] font-bold text-white/30 uppercase tracking-widest font-mono">Throughput</span>
+                </div>
+                <div>
+                    <h3 class="text-2xl lg:text-3xl font-bold tracking-tighter mb-2 tabular-nums">1.2M <span class="text-sm font-medium text-white/50">tx/s</span></h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-success text-xs font-mono font-bold">+12.4%</span>
+                        <div class="h-1 flex-1 bg-white/5 overflow-hidden rounded-full">
+                            <div class="h-full bg-primary w-[72%] shadow-[0_0_10px_#0099ff]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capital Flow Chart -->
+            <div class="col-span-12 lg:col-span-6 row-span-2 bento-border glass-panel p-6 flex flex-col gap-4 relative overflow-hidden group hover:bento-border-active transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex justify-between items-center relative z-10">
+                    <div class="flex items-center gap-3">
+                        <p class="text-[9px] font-bold tracking-widest text-white/40 uppercase font-mono">Capital Flow Velocity</p>
+                        <span class="px-2 py-0.5 bg-primary/20 text-primary text-[8px] font-bold uppercase tracking-tighter border border-primary/30">Live Stream</span>
+                    </div>
+                    <p class="text-xl font-bold tabular-nums font-mono text-white">$4.2B</p>
+                </div>
+                <!-- Simple CSS Chart representation -->
+                <div class="flex-1 w-full mt-2 flex items-end gap-1 opacity-80">
+                    <div class="w-full bg-primary/20 h-[40%] group-hover:h-[50%] transition-all duration-500 rounded-t-sm"></div>
+                    <div class="w-full bg-primary/30 h-[60%] group-hover:h-[70%] transition-all duration-700 rounded-t-sm"></div>
+                    <div class="w-full bg-primary/40 h-[45%] group-hover:h-[55%] transition-all duration-300 rounded-t-sm"></div>
+                    <div class="w-full bg-primary/50 h-[80%] group-hover:h-[90%] transition-all duration-600 rounded-t-sm"></div>
+                    <div class="w-full bg-primary/60 h-[30%] group-hover:h-[40%] transition-all duration-400 rounded-t-sm"></div>
+                    <div class="w-full bg-primary h-[75%] group-hover:h-[85%] transition-all duration-500 rounded-t-sm shadow-[0_0_15px_#0099ff]"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-bold text-white/20 uppercase tracking-widest font-mono relative z-10">
+                    <span>00:00</span>
+                    <span>08:00</span>
+                    <span>16:00</span>
+                    <span>24:00</span>
+                </div>
+            </div>
+
+            <!-- Node Status -->
+            <div class="col-span-6 lg:col-span-3 row-span-2 bento-border glass-panel p-6 flex flex-col justify-between hover:bg-white/5 transition-colors" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex justify-between items-start">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1 font-mono">Node Connectivity</span>
+                        <span class="text-xs font-bold text-primary font-mono">&lt;CORE: ACTIVE&gt;</span>
+                    </div>
+                    <div class="w-2 h-2 rounded-full bg-success shadow-[0_0_10px_#0bda5b] animate-pulse"></div>
+                </div>
+                <div class="grid grid-cols-5 gap-1 mt-4">
+                    <div class="h-6 bg-primary/40 bento-border"></div>
+                    <div class="h-6 bg-primary/60 bento-border"></div>
+                    <div class="h-6 bg-primary/20 bento-border"></div>
+                    <div class="h-6 bg-primary/80 bento-border"></div>
+                    <div class="h-6 bg-primary/40 bento-border animate-pulse"></div>
+                </div>
+                <div class="flex justify-between items-center mt-auto pt-4">
+                    <p class="text-[9px] font-bold text-white/40 font-mono">SYNC_RATE</p>
+                    <p class="text-xs font-bold tracking-widest text-white">99.98%</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- NEW SECTION: Network Status (Grid of Cards) -->
+        <section id="network" data-aos="fade-up">
+            <div class="flex items-end justify-between mb-8 border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold uppercase tracking-tight text-white"><span class="text-primary mr-2">//</span>Active Nodes</h3>
+                    <p class="text-white/40 text-xs font-mono mt-1">Decentralized Computation Grid</p>
+                </div>
+                <div class="text-[10px] font-mono text-primary animate-pulse">LIVE_UPDATE: 12ms</div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Node 1 -->
+                <div class="bento-border glass-panel p-5 group hover:border-primary/50 transition-all cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="material-symbols-outlined text-primary text-xl">dns</span>
+                        <span class="text-[9px] font-mono text-success border border-success/30 px-2 py-0.5 rounded">ONLINE</span>
+                    </div>
+                    <h4 class="font-mono text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">HK-01_ALPHA</h4>
+                    <p class="text-xs text-white/40 mb-4">Region: East Asia (Hong Kong)</p>
+                    <div class="flex justify-between text-[10px] font-mono text-white/60 border-t border-white/5 pt-3">
+                        <span>Load: 42%</span>
+                        <span>Lat: 4ms</span>
+                    </div>
+                </div>
+                <!-- Node 2 -->
+                <div class="bento-border glass-panel p-5 group hover:border-primary/50 transition-all cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="material-symbols-outlined text-primary text-xl">hub</span>
+                        <span class="text-[9px] font-mono text-success border border-success/30 px-2 py-0.5 rounded">ONLINE</span>
+                    </div>
+                    <h4 class="font-mono text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">NY-04_BETA</h4>
+                    <p class="text-xs text-white/40 mb-4">Region: North America (NYC)</p>
+                    <div class="flex justify-between text-[10px] font-mono text-white/60 border-t border-white/5 pt-3">
+                        <span>Load: 88%</span>
+                        <span>Lat: 12ms</span>
+                    </div>
+                </div>
+                <!-- Node 3 -->
+                <div class="bento-border glass-panel p-5 group hover:border-primary/50 transition-all cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="material-symbols-outlined text-alert text-xl">warning</span>
+                        <span class="text-[9px] font-mono text-alert border border-alert/30 px-2 py-0.5 rounded">HIGH_LOAD</span>
+                    </div>
+                    <h4 class="font-mono text-lg font-bold text-white mb-1 group-hover:text-alert transition-colors">LD-02_GAMMA</h4>
+                    <p class="text-xs text-white/40 mb-4">Region: Europe (London)</p>
+                    <div class="flex justify-between text-[10px] font-mono text-white/60 border-t border-white/5 pt-3">
+                        <span>Load: 99%</span>
+                        <span>Lat: 45ms</span>
+                    </div>
+                </div>
+                <!-- Node 4 -->
+                <div class="bento-border glass-panel p-5 group hover:border-primary/50 transition-all cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="material-symbols-outlined text-primary text-xl">share</span>
+                        <span class="text-[9px] font-mono text-success border border-success/30 px-2 py-0.5 rounded">ONLINE</span>
+                    </div>
+                    <h4 class="font-mono text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">SG-09_DELTA</h4>
+                    <p class="text-xs text-white/40 mb-4">Region: SE Asia (Singapore)</p>
+                    <div class="flex justify-between text-[10px] font-mono text-white/60 border-t border-white/5 pt-3">
+                        <span>Load: 21%</span>
+                        <span>Lat: 8ms</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW SECTION: Liquidity Pool (Data Table) -->
+        <section id="liquidity" class="bento-border glass-panel p-1" data-aos="zoom-in">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h3 class="text-xl font-bold uppercase tracking-tight text-white"><span class="text-primary mr-2">//</span>Liquidity Matrix</h3>
+                <button class="text-[10px] font-mono uppercase text-primary border border-primary/30 px-3 py-1 hover:bg-primary hover:text-black transition-colors">Export_CSV</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left font-mono text-sm">
+                    <thead>
+                        <tr class="bg-white/5 text-white/40 text-[10px] uppercase tracking-widest">
+                            <th class="p-4 font-normal">Asset_Pair</th>
+                            <th class="p-4 font-normal">Price_Index</th>
+                            <th class="p-4 font-normal">24h_Change</th>
+                            <th class="p-4 font-normal">24h_Vol</th>
+                            <th class="p-4 font-normal text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-4 font-bold text-white group-hover:text-primary">BTC / USD</td>
+                            <td class="p-4 text-white">$64,231.50</td>
+                            <td class="p-4 text-success">+1.24%</td>
+                            <td class="p-4 text-white/60">$42.8B</td>
+                            <td class="p-4 text-right"><span class="cursor-pointer text-primary hover:text-white hover:underline text-xs">&lt;TRADE&gt;</span></td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-4 font-bold text-white group-hover:text-primary">ETH / USD</td>
+                            <td class="p-4 text-white">$3,421.12</td>
+                            <td class="p-4 text-success">+0.85%</td>
+                            <td class="p-4 text-white/60">$18.2B</td>
+                            <td class="p-4 text-right"><span class="cursor-pointer text-primary hover:text-white hover:underline text-xs">&lt;TRADE&gt;</span></td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-4 font-bold text-white group-hover:text-primary">SOL / USD</td>
+                            <td class="p-4 text-white">$145.60</td>
+                            <td class="p-4 text-alert">-2.4%</td>
+                            <td class="p-4 text-white/60">$3.1B</td>
+                            <td class="p-4 text-right"><span class="cursor-pointer text-primary hover:text-white hover:underline text-xs">&lt;TRADE&gt;</span></td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-4 font-bold text-white group-hover:text-primary">QFLOW / USD</td>
+                            <td class="p-4 text-white">$142.88</td>
+                            <td class="p-4 text-success font-bold">+14.5%</td>
+                            <td class="p-4 text-white/60">$850M</td>
+                            <td class="p-4 text-right"><span class="cursor-pointer text-primary hover:text-white hover:underline text-xs">&lt;TRADE&gt;</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- NEW SECTION: Execute Command (Contact Form) -->
+        <section id="access" class="max-w-2xl mx-auto" data-aos="fade-up">
+            <div class="bento-border glass-panel p-1 rounded-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-white to-primary opacity-50"></div>
+                <div class="p-8 md:p-12">
+                    <div class="mb-8 text-center">
+                        <span class="material-symbols-outlined text-4xl text-white mb-4">terminal</span>
+                        <h2 class="text-2xl font-bold uppercase tracking-tighter text-white">Execute <span class="text-primary">Protocol</span></h2>
+                        <p class="text-white/40 text-xs font-mono mt-2">Request terminal access via secure command line.</p>
+                    </div>
+                    
+                    <form class="space-y-6 font-mono text-sm" onsubmit="event.preventDefault(); alert('Command Executed. Uplink Established.');">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] uppercase text-primary font-bold">&gt; ENTER_IDENTITY</label>
+                            <input type="text" class="w-full bg-black/40 border border-white/10 p-4 text-white focus:border-primary focus:ring-0 focus:outline-none placeholder-white/20 transition-all" placeholder="user_name">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] uppercase text-primary font-bold">&gt; COMMUNICATION_CHANNEL</label>
+                            <input type="email" class="w-full bg-black/40 border border-white/10 p-4 text-white focus:border-primary focus:ring-0 focus:outline-none placeholder-white/20 transition-all" placeholder="email_address">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] uppercase text-primary font-bold">&gt; QUERY_PARAMETERS</label>
+                            <textarea rows="3" class="w-full bg-black/40 border border-white/10 p-4 text-white focus:border-primary focus:ring-0 focus:outline-none placeholder-white/20 transition-all" placeholder="Define objective..."></textarea>
+                        </div>
+                        <button class="w-full py-4 bg-primary text-black font-bold uppercase tracking-widest hover:bg-white transition-all mt-4 border border-transparent hover:border-primary relative overflow-hidden group">
+                            <span class="relative z-10">&gt; EXECUTE_COMMAND</span>
+                            <div class="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 z-0"></div>
+                        </button>
+                        <div class="text-center text-[9px] text-white/20 mt-4">
+                            ENCRYPTION: SHA-256 | CONNECTION: SECURE
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer Stats Ticker -->
+    <footer class="w-full bento-border border-b-0 border-x-0 py-3 bg-background-dark overflow-hidden fixed bottom-0 left-0 z-40 backdrop-blur-md">
+        <div class="flex items-center whitespace-nowrap gap-12 animate-[scroll_30s_linear_infinite] font-mono">
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">BTC/USD</span>
+                <span class="text-sm font-bold tabular-nums text-white">64,231.50</span>
+                <span class="text-success text-[10px] font-bold">+1.2%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">ETH/USD</span>
+                <span class="text-sm font-bold tabular-nums text-white">3,421.12</span>
+                <span class="text-success text-[10px] font-bold">+0.8%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">QFLOW/USD</span>
+                <span class="text-sm font-bold tabular-nums text-white">142.88</span>
+                <span class="text-primary text-[10px] font-bold">+4.5%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">GAS</span>
+                <span class="text-sm font-bold tabular-nums text-white">21 Gwei</span>
+                <span class="text-white/50 text-[10px] font-bold">STABLE</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">NET_LOAD</span>
+                <span class="text-sm font-bold tabular-nums text-white">14%</span>
+                <span class="text-success text-[10px] font-bold">OPTIMAL</span>
+            </div>
+            <!-- Duplicate for seamless scroll -->
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">BTC/USD</span>
+                <span class="text-sm font-bold tabular-nums text-white">64,231.50</span>
+                <span class="text-success text-[10px] font-bold">+1.2%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-white/30 text-[10px] font-bold uppercase tracking-widest">ETH/USD</span>
+                <span class="text-sm font-bold tabular-nums text-white">3,421.12</span>
+                <span class="text-success text-[10px] font-bold">+0.8%</span>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Init AOS
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+
+        // Loader Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 2000);
+        });
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMenu() {
+            if (mobileMenu.classList.contains('menu-open')) {
+                mobileMenu.classList.remove('menu-open');
+                document.body.style.overflow = '';
+            } else {
+                mobileMenu.classList.add('menu-open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('border-primary/20');
+                navbar.classList.remove('border-white/5');
+            } else {
+                navbar.classList.remove('border-primary/20');
+                navbar.classList.add('border-white/5');
+            }
+        });
+    </script>
+</body>
+</html>

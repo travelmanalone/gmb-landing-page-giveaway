@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Aura Music - Discover, Library, Live & Premium</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round|Material+Icons" rel="stylesheet"/>
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1", 
+              secondary: "#8B5CF6",
+              "background-light": "#f8fafc",
+              "background-dark": "#0a0a0c",
+            },
+            fontFamily: {
+              display: ["Outfit", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+              live: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+            animation: {
+                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          },
+        },
+      };
+    </script>
+    <style>
+        /* Shared Glass Styles */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dark .glass {
+            background: rgba(15, 12, 41, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Premium Specific Styles */
+        .glow-gold {
+            box-shadow: 0 0 40px -10px rgba(234, 179, 8, 0.3);
+        }
+        
+        /* Live Page Specific Styles */
+        .neon-border {
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            border-color: rgba(99, 102, 241, 0.8);
+        }
+        
+        /* Discover Page Specific Styles */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-premium {
+            background: linear-gradient(to right, #8B5CF6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Active Indicator */
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: #6366f1;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #6366f1;
+            transition: all 0.3s ease;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Utility */
+        .hidden-view {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .visible-view {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary/30 overflow-x-hidden pb-24">
+
+    <!-- Global Background Ambience -->
+    <div class="fixed inset-0 pointer-events-none opacity-40 dark:opacity-100 z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-900/30 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-900/20 blur-[120px]"></div>
+        <div class="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-blue-900/10 blur-[100px] animate-pulse-slow"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 px-4 md:px-6 py-4">
+        <nav class="max-w-7xl mx-auto flex items-center justify-between glass px-6 py-3 rounded-2xl shadow-lg shadow-black/5">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('discover')">
+                <div class="w-10 h-10 bg-white dark:bg-white rounded-full flex items-center justify-center text-background-dark shadow-md">
+                    <span class="material-icons-round text-2xl text-indigo-600">north</span>
+                </div>
+                <span class="font-display font-extrabold text-2xl tracking-tighter uppercase dark:text-white">Aura</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">
+                <button id="nav-discover" onclick="switchTab('discover')" class="hover:text-primary transition-all relative">Discover</button>
+                <button id="nav-live" onclick="switchTab('live')" class="hover:text-primary transition-all relative">Live Shows</button>
+                <button id="nav-library" onclick="switchTab('library')" class="text-slate-900 dark:text-white relative active-tab hover:text-primary transition-all">Library</button>
+                <button id="nav-premium" onclick="switchTab('premium')" class="hover:text-primary transition-all relative">Premium</button>
+            </div>
+            
+            <button class="px-6 py-2 border border-slate-200 dark:border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-slate-700 dark:text-white">
+                Sign In
+            </button>
+        </nav>
+    </header>
+
+    <!-- CONTENT CONTAINER -->
+    <div class="relative z-10">
+
+        <!-- ==================== DISCOVER VIEW (NEW) ==================== -->
+        <main id="discover-view" class="max-w-7xl mx-auto px-6 py-8 hidden-view">
+            <!-- Hero Banner -->
+            <div class="relative rounded-[2rem] overflow-hidden mb-12 h-[450px] group shadow-2xl cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Featured Album" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
+                
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 max-w-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-white/20 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-white">Featured Album</span>
+                        <span class="px-3 py-1 bg-primary/80 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-white">New Release</span>
+                    </div>
+                    <h2 class="text-5xl md:text-7xl font-display font-black text-white mb-4 leading-none">ETHEREAL <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">HORIZONS</span></h2>
+                    <p class="text-slate-200 text-lg mb-8 font-medium">Dive into a sonic journey through space and time. The highly anticipated album from The Midnight Void is finally here.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-white text-slate-900 px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-slate-200 transition-colors flex items-center gap-2">
+                            <span class="material-icons-round">play_arrow</span> Play Now
+                        </button>
+                        <button class="glass text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2">
+                            <span class="material-icons-round">favorite_border</span> Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trending Section -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold dark:text-white flex items-center gap-2">
+                        <span class="material-icons-round text-primary">trending_up</span> Trending Now
+                    </h3>
+                    <button class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">See All</button>
+                </div>
+                
+                <div class="flex gap-6 overflow-x-auto pb-6 hide-scrollbar snap-x">
+                    <!-- Card 1 -->
+                    <div class="min-w-[200px] md:min-w-[240px] snap-start group cursor-pointer">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trending 1">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-icons-round text-white text-4xl bg-primary/80 rounded-full p-2">play_arrow</span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate">Solar Power</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Lorde</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="min-w-[200px] md:min-w-[240px] snap-start group cursor-pointer">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trending 2">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-icons-round text-white text-4xl bg-primary/80 rounded-full p-2">play_arrow</span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate">After Hours</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">The Weeknd</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="min-w-[200px] md:min-w-[240px] snap-start group cursor-pointer">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trending 3">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-icons-round text-white text-4xl bg-primary/80 rounded-full p-2">play_arrow</span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate">Future Nostalgia</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Dua Lipa</p>
+                    </div>
+                    
+                    <!-- Card 4 -->
+                    <div class="min-w-[200px] md:min-w-[240px] snap-start group cursor-pointer">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1621360841013-c768371e93cf?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trending 4">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-icons-round text-white text-4xl bg-primary/80 rounded-full p-2">play_arrow</span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate">Happier Than Ever</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Billie Eilish</p>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="min-w-[200px] md:min-w-[240px] snap-start group cursor-pointer">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-3">
+                            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trending 5">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-icons-round text-white text-4xl bg-primary/80 rounded-full p-2">play_arrow</span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate">Montero</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Lil Nas X</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moods & Genres -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold dark:text-white mb-6">Moods & Genres</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Pop</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Romance</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Focus</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-500 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Party</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Chill</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    <div class="h-32 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 p-4 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+                        <span class="font-bold text-white text-lg relative z-10">Rock</span>
+                        <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Releases Grid -->
+            <div>
+                <h3 class="text-2xl font-bold dark:text-white mb-6">New Releases</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Release Item 1 -->
+                    <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1619983081593-e2ba5b543e60?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Midnight Sky</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Miley Cyrus • Single</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+
+                    <!-- Release Item 2 -->
+                    <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1514525253440-b393452e8d26?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Levitating</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Dua Lipa • Album</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+
+                    <!-- Release Item 3 -->
+                    <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1496293455970-f8581aae0e3c?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Save Your Tears</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">The Weeknd • Single</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+                     <!-- Release Item 4 -->
+                     <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Good 4 U</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Olivia Rodrigo • Album</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+
+                    <!-- Release Item 5 -->
+                    <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Peaches</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Justin Bieber • Single</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+
+                    <!-- Release Item 6 -->
+                    <div class="glass p-3 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-colors cursor-pointer group">
+                        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=200&auto=format&fit=crop" class="w-16 h-16 rounded-xl object-cover" alt="Album Art">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">Kiss Me More</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Doja Cat • Single</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                            <span class="material-icons-round text-lg">play_arrow</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ==================== LIBRARY VIEW ==================== -->
+        <main id="library-view" class="max-w-7xl mx-auto px-6 py-8 visible-view">
+            <div class="mb-12">
+                <h1 class="font-display text-5xl md:text-7xl font-extrabold uppercase tracking-tight text-gradient mb-6 leading-tight">
+                    Your <span class="text-primary opacity-90">Sound.</span>
+                </h1>
+                <div class="flex flex-wrap items-center gap-8 border-b border-slate-200 dark:border-white/5 pb-4">
+                    <button class="text-lg font-semibold text-slate-900 dark:text-white border-b-2 border-primary pb-4 -mb-[18px] transition-all">Playlists</button>
+                    <button class="text-lg font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-4 -mb-[18px] border-b-2 border-transparent transition-all">Artists</button>
+                    <button class="text-lg font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-4 -mb-[18px] border-b-2 border-transparent transition-all">Albums</button>
+                    <button class="text-lg font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-4 -mb-[18px] border-b-2 border-transparent transition-all">Podcasts</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Left Grid: Playlists -->
+                <div class="lg:col-span-7 xl:col-span-8">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <!-- Card 1 -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 glass p-2 border border-white/5">
+                                <img alt="Cyberpunk Beats" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQRHvLfJ_8S7LLmkecI137eyNKMvD-m-nD4fxzW4FPiw6C1fyC5OC6hzJZOcKWrgZDXV-G2MiTTzAUNdLh9hAHZ3ZMfxMGb3aiijbSAJ7WaAGoDWBuA4vg1QAD7TGLbxqjkr4TIU9IIebg0zbjEl1JxDhLvB3FlxgCOemNK8zL_unQcVVb7GIYWUAabWuwBBqF2ITXjT2W3TiJ3P2tFQhgLKqZzWNi8DElLkYec3UlT6EpPHkKXB9FXJYSVNX0S-gUipvBNklxglM"/>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                                    <span class="material-icons-round text-white text-5xl drop-shadow-lg">play_circle_filled</span>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors text-slate-800 dark:text-white">Cyberpunk Beats</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">248 Tracks</p>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 glass p-2 border border-white/5">
+                                <img alt="Midnight Jazz" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzTUTzjwZ0rDwLwFJMpGh5aHVJRriXtcvKbdzSHUhPjgy6adeJFURc_q8figNcMOSfeX_2u1UJmdYHmXZ32OkEuhsmCqEFMxTXN2p1KAV8SiczWS2k40uuQjuZ0RfvaK7DzRmg42jvtxFBXT7QyAVIe8bv_wscGv51Jsvr6yKgCxyLcJlqzNA-iNICyfETLNhwbFMtWt82-ngXI7bu9mcmnfqbU-C-t5PWukOQ951mbojTKPEztGx2oBnJi3jFXvY7MlRKBhU8MZc"/>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                                    <span class="material-icons-round text-white text-5xl drop-shadow-lg">play_circle_filled</span>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors text-slate-800 dark:text-white">Midnight Jazz</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">112 Tracks</p>
+                        </div>
+
+                        <!-- Card 3 (Now Playing) -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 glass p-2 border-primary/50 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+                                <img alt="Neon Dreams" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsh0M0Yyx1ZCTHicmdC_FD-KVPkxjNEEockcNfwmmEaIx5rDcVz8Yq07K4q4KOdt9BGlZ8lT-qhC8YL3j9GwhaQ4gqetfL5a_de1ziOpCess2qRJjKQYPuexSIMPUDlRe2Fjp1ewKsS9EZp-xFg74IlLo8UOXImOS2DuzTktan8Fqt8Llu8K8Rnrmxb9Ox8KgBYC93GbL9kUSWBeb6gYXgBqtA0c4gq11Bi3ygMDcOnbo9qheomn4lJD9AEekSlOAiqoFuDMwHTxk"/>
+                                <div class="absolute top-4 right-4 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-full shadow-lg shadow-primary/40 z-10">NOW PLAYING</div>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                                    <span class="material-icons-round text-white text-5xl drop-shadow-lg">pause_circle_filled</span>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-1 text-primary">Neon Dreams</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Synthwave Collective</p>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 glass p-2 border border-white/5">
+                                <img alt="Vortex High" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXVJ0ftiEjm7U03qNLkA7wagg4gGm0anZHcaAAlx1rj88c_fQwTkqrcBZw6T4xvj4NE6fPMxc0ITj9_m4k-w7WK_w4R1WTA8-Bdo_etHloB0V2SHlubR16UtCf8mx4H_lJz2uxMqo2aA78gVSPI_dQ3Pd0c5RSzmjCakJVmFcKIXHHJLmuBUZnVsbe4yeyjXzWlZo4l3iY0AYsa69_9alQABmFBXIbqvCCIdUVCVaO68BJTqEjUPXWkhtTAyzYuR_z_56dyQPkKgc"/>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                                    <span class="material-icons-round text-white text-5xl drop-shadow-lg">play_circle_filled</span>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors text-slate-800 dark:text-white">Vortex High</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">42 Tracks</p>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 glass p-2 border border-white/5">
+                                <img alt="Acoustic Morning" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqBAMv0U8KfsJqjeO2FfXpKLCK-aWirNIJR8pO0Pxlt7MYDImY76-jsFAEYGv5Pj8BlePhCbBnb46jqKOVtW_S8W-wtMaWkKBJf6IxM9KG7L8H6_g4RX-dgeR9e-FEk6QQ-UEots0KOGVGK8Zuzxnee9-fMq5ylrQr4Xed2PVbP7_ImB37niZdctFtLafdZX5hZ9gxWRQTbvF16AArObURaFGiBTYchuYHZNVxBgZm5YUe8w-uywoU8wE_Wt1-1n0jaRtluM9pUD4"/>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                                    <span class="material-icons-round text-white text-5xl drop-shadow-lg">play_circle_filled</span>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-1 group-hover:text-primary transition-colors text-slate-800 dark:text-white">Acoustic Morning</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">88 Tracks</p>
+                        </div>
+
+                        <!-- New Playlist -->
+                        <div class="group cursor-pointer">
+                            <div class="relative aspect-square overflow-hidden rounded-3xl mb-4 border-2 border-dashed border-slate-300 dark:border-white/10 flex flex-col items-center justify-center hover:border-primary/50 hover:bg-white/5 transition-all">
+                                <span class="material-icons-round text-4xl text-slate-400 dark:text-white/20 mb-2 group-hover:text-primary transition-colors">add_circle_outline</span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-slate-400">New Playlist</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar: Tracklist -->
+                <aside class="lg:col-span-5 xl:col-span-4 glass rounded-[2rem] p-6 sticky top-28 border border-white/5">
+                    <div class="flex items-start justify-between mb-8">
+                        <div class="flex gap-4">
+                            <img alt="Neon Dreams Detail" class="w-24 h-24 rounded-2xl object-cover shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvTODiju9_Qkh2Yo-VIb2gUkQZKXxXp3tmJp8WCDF6_n28iIFUGIZna70Ay-cUUPbjkVyoi2-VDvi22cVMBtsGow0Mx_5URUNnnPKgi7BaCEQyxgVUU-K8ZpESzA_HpwLqTIclf-zw2JBuk6g2N3_Jpk8vPqlqeIoUJCeK0ZqB8HSxsaEcf1XSr3boyf_iaZNHRePUg14ZxpChaAzLWW16y4fcEV03d1y9dNU5VXBxK54CzZwYjeG4sgD5DwTWAYgEL7G0WMpk_hE"/>
+                            <div>
+                                <h2 class="font-display font-extrabold text-2xl uppercase mb-1 text-slate-800 dark:text-white">Neon Dreams</h2>
+                                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Synthwave Collective</p>
+                                <div class="flex gap-2">
+                                    <button class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-primary/30">
+                                        <span class="material-icons-round text-sm">play_arrow</span>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10">
+                                        <span class="material-icons-round text-sm text-slate-600 dark:text-slate-300">favorite_border</span>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10">
+                                        <span class="material-icons-round text-sm text-slate-600 dark:text-slate-300">more_horiz</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <!-- Header Row -->
+                        <div class="grid grid-cols-12 px-2 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <div class="col-span-7">Title</div>
+                            <div class="col-span-3 text-right">Time</div>
+                            <div class="col-span-2 text-right">Pop</div>
+                        </div>
+                        
+                        <!-- Tracks -->
+                        <div class="grid grid-cols-12 px-2 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 group transition-colors cursor-pointer items-center">
+                            <div class="col-span-7">
+                                <div class="font-bold text-sm text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors">Resonance Wave</div>
+                                <div class="text-[10px] text-slate-500">Homebound</div>
+                            </div>
+                            <div class="col-span-3 text-right text-xs font-medium text-slate-400 italic">4:21</div>
+                            <div class="col-span-2 flex justify-end">
+                                <div class="flex gap-0.5">
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-12 px-2 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 group transition-colors cursor-pointer items-center">
+                            <div class="col-span-7">
+                                <div class="font-bold text-sm text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors">Midnight Driver</div>
+                                <div class="text-[10px] text-slate-500">Chrome Skies</div>
+                            </div>
+                            <div class="col-span-3 text-right text-xs font-medium text-slate-400 italic">3:45</div>
+                            <div class="col-span-2 flex justify-end">
+                                <div class="flex gap-0.5">
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Track -->
+                        <div class="grid grid-cols-12 px-2 py-3 rounded-xl bg-primary/10 border border-primary/20 group transition-colors cursor-pointer items-center">
+                            <div class="col-span-7 flex items-center gap-3">
+                                <span class="material-icons-round text-primary text-sm animate-pulse">bar_chart</span>
+                                <div>
+                                    <div class="font-bold text-sm text-primary">Gridrunner</div>
+                                    <div class="text-[10px] text-primary/60">Digital Shadows</div>
+                                </div>
+                            </div>
+                            <div class="col-span-3 text-right text-xs font-bold text-primary italic">5:12</div>
+                            <div class="col-span-2 flex justify-end">
+                                <div class="flex gap-0.5">
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-12 px-2 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 group transition-colors cursor-pointer items-center">
+                            <div class="col-span-7">
+                                <div class="font-bold text-sm text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors">Night City</div>
+                                <div class="text-[10px] text-slate-500">Retro Pulse</div>
+                            </div>
+                            <div class="col-span-3 text-right text-xs font-medium text-slate-400 italic">4:02</div>
+                            <div class="col-span-2 flex justify-end">
+                                <div class="flex gap-0.5">
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-primary rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                    <div class="w-1 h-3 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-white/5">
+                        <button class="w-full py-4 glass rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
+                            View Full Tracklist
+                            <span class="material-icons-round text-sm">east</span>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <!-- ==================== LIVE VIEW (NEW) ==================== -->
+        <main id="live-view" class="max-w-7xl mx-auto px-6 py-8 hidden-view font-live">
+            <section class="mb-20">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-3 h-3 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        <h2 class="text-2xl font-bold tracking-tight dark:text-white">Live Now</h2>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="p-2 rounded-full glass hover:bg-primary hover:text-white transition-colors dark:text-white">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <button class="p-2 rounded-full glass hover:bg-primary hover:text-white transition-colors dark:text-white">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative group rounded-[2rem] overflow-hidden aspect-[21/9] shadow-2xl">
+                    <img alt="Live concert background" class="absolute inset-0 w-full h-full object-cover brightness-50 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfX5UKBY0Nut_Cg4sbMZqIRd9lt7J887-RTVGuvAIPAf6cNHAErjEY_w8_kAD94m_6l3rweyZ_zsM4NzZK51MPTGkAulShhcQL3nSPIzEo6NseiOJTZj9P2AWrzxX1uoU2FIbDA90E5NrPdvk-bevPP73T5ahvsYEk3X9eCldYkYIWiPWrad-5t2mhOaWVnqJi6nQkCtTGls8tb3-s9K1nk9tZlyrPxxEVT45yQ5RSrm231KeguzEVQOlixnp3SSHQ_0ts0SZZeUo"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                    <div class="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div class="space-y-4 max-w-2xl">
+                                <span class="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-lg text-xs font-bold uppercase tracking-widest backdrop-blur-md">
+                                    Exclusive Performance
+                                </span>
+                                <h1 class="text-4xl md:text-7xl font-black uppercase tracking-tight leading-none text-white">
+                                    Midnight <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-pink-500">Echoes</span>
+                                </h1>
+                                <p class="text-slate-300 text-sm md:text-lg font-medium max-w-md">
+                                    Experience the virtual world tour live from Tokyo. Immersive 3D spatial audio enabled.
+                                </p>
+                                <div class="flex items-center gap-4 py-2">
+                                    <div class="flex -space-x-2">
+                                        <img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXg_Kwu1treGXcohtW6BqBjHjdjqTkA64nfRwB05-JuoOzO-MmuaIwwhoOxNmju3Ph82fDW3rqWRWP-jwARi_TGuWPy5xXpcDWftcC1BjAw8oHYxwJ_PQk9cMW6xtUBpql1m0Y3D8_OEyv4NixPn4GfJIb9q32ZXEDKbVmxduFyxsIDylnxnyxb-n4Fm_i_XU-I4YRqlGtOCuDAgSvUhpViEGa1ftEYSD6m17RvywTroZJp3q8basYnaZMF4eIcvDmjhQDX5apBrc"/>
+                                        <img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5xeeIUNBV-I6cSj2BqIPJvblAUa2N-Zi4B3Xq2tsZJVVs1xPfeUiOa_BQd2a1k6_K2HdfiIeXS2vcKjQOTfXnpQ8gsekk8486QN4qxr7EjV3SAygc544EPyRvvxaZXr-yFLjFw0TX3gRX-ff3eVnGXLXu2bPlvMdRyZMzu2FkfQwqrQThKX1YhBn39AUpjXNNvK5msVrABcDr9lSk0YEGGY0-YcUQ2YXfZmJVQKIZaMmh4ymI_QDZRjMPOEYEd9BeOYWZbVyyWNY"/>
+                                        <img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHOqcHv3aLaSppt9DGWZo8M0XSwuF4kCwIdM7B9UmOqcl6Hh3t0PUgOMmpEixaiaU6yUgNSbB9AN5tkPZjJof2PYD1Q_5qEfFuRMPL0b4YJCrtaMGI1gywnYJxsMLEtbMP2rL9TOclipeVSy_mBpTJLfRynPlGDwXUaPe2TYDXtWMpftgpgsgeLZHB4yrcL0Xsrk2MzAwrQUKsICfMg8F5B0tRCMmGUTHamYklRkDIDbhBJCCsodZS-cuh3gAq710YZhgwrVKX8Jc"/>
+                                    </div>
+                                    <span class="text-slate-400 text-sm font-semibold">12.4k watching now</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button class="bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                                    <span class="material-icons">play_arrow</span>
+                                    Join Stream
+                                </button>
+                                <button class="glass p-4 rounded-2xl hover:bg-white/10 transition-colors text-white">
+                                    <span class="material-icons">share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold tracking-tight dark:text-white">Upcoming Events</h2>
+                        <p class="text-slate-500 dark:text-slate-400 mt-1">Don't miss out on the next big beat.</p>
+                    </div>
+                    <div class="flex bg-slate-200 dark:bg-white/5 p-1 rounded-xl">
+                        <button class="px-4 py-2 bg-white dark:bg-white/10 rounded-lg text-xs font-bold uppercase shadow-sm dark:text-white">All</button>
+                        <button class="px-4 py-2 text-slate-500 text-xs font-bold uppercase hover:text-primary transition-colors">Virtual</button>
+                        <button class="px-4 py-2 text-slate-500 text-xs font-bold uppercase hover:text-primary transition-colors">In-Person</button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Event 1 -->
+                    <div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+                            <img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuRqqgRzHk3XlrLqQ6bF0TPV9v-DWxLZBfMb4EceirgOAvq-5d9rxSzIyCr2xkCuB9o1pG45HjF0D9CrWXd-Vb7xlUx4GhFVGRp3yLLxw1Cou-LkVVE9evuwHhxDK4iNbGkAHVu8lTtKHYSFHHKXs9hbQxLcBruCZKZuTqLf8sBEhP7ER2uCwn2C30Zz757aD4cd6k_teNhGUbwB9sErB7eNo2mEO5rXMR87ep3eaPBghqQ7Na4QPtFHHO_Plv9HXV2Na5d-FDq4Q"/>
+                            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                                Sept 24
+                            </div>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold dark:text-white">Neon Horizon</h3>
+                                <span class="text-primary font-bold">$24.00</span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Electronic / Future Bass</p>
+                            <button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                                Get Tickets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event 2 -->
+                    <div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+                            <img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe8bjIOG2qflRKxoUNSS59B-zIpI8FfGhmZNErptHBt78JgeqYSSlFrF1P9GbHbe_9VqzGe7BKY_f-S5RQOLcmH5zM5Z63EkRCXaZU4xyJoGpTnaq8lG5q_G0ViEeIJigrTwgHQ3ZmGPpAqVrJ-UXTOclhlmvGhJc6pmIofVSrza3IQ58hTTpGcaP6B6JW8RfRqjt1wouR5T_3cPtYf3i-GA5otrcvJWK4xcpFvXOEbf2aZChxOrYj4DucnFClj-An4JzhZRP-o_k"/>
+                            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                                Oct 12
+                            </div>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold dark:text-white">Soul Sessions</h3>
+                                <span class="text-primary font-bold">$18.00</span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Indie / Soul / Jazz</p>
+                            <button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                                Get Tickets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event 3 -->
+                    <div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+                            <img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcZaxM7CPZsGjf5ymG8BWpQ6Q4yHkYqahhp6pClirniW8umDRX1VXz_XFIYIH3P2zWEcYObmJxhYxQfCbojTVis4bE-yZUWHVklea79N7u2V7fNg8p1BCY7PbSyGSmqdWogYwXXqRMIqxZ3s-X_RtOaIcdBiuVxtyCj5mslDptVavJj_kpWOrz81cfrFJFqQTu5ApLszuVI5SipF9-N1kekevWcX3nSxCOR6sC3ySdQbHkgk0EVzekPOFThw5pfOCccmk_KHB16do"/>
+                            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                                Oct 29
+                            </div>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold dark:text-white">Vibe Check</h3>
+                                <span class="text-primary font-bold">Free</span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Lo-fi / Chill Hop</p>
+                            <button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                                Remind Me
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event 4 -->
+                    <div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+                            <img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6MBW5GACrwidixDLkeE6Dk13D0EZnLTB2I8peM7-wHzXUhFV6ouLKKxkTebPkAnMaQHxroRYnpGjft2aFn9PUnOMg7NaNJHnvZjN5AcmKQw3MoQEfLqc8WjG_gK3dj--fXqNjWRvlGK1PD4E1QETki4i0lQPWFytH9acaLRfSUAW5yV3aSGYWrLPtUgO7nkNhdO90CWs9eZZzFjYeyekbY0mj431o8S5Qsqfvr0B9bWGjfAyVFMZNowjq4AceAHV7icCsmxHStHo"/>
+                            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                                Nov 05
+                            </div>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold dark:text-white">Static Pulse</h3>
+                                <span class="text-primary font-bold">$45.00</span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Techno / Industrial</p>
+                            <button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                                Get Tickets
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mt-32">
+                <div class="bg-indigo-600 rounded-[3rem] p-12 relative overflow-hidden text-center md:text-left">
+                    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-pink-500/20 to-transparent"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+                        <div class="max-w-xl">
+                            <h2 class="text-4xl font-black text-white mb-4">Never Miss a Beat.</h2>
+                            <p class="text-indigo-100 text-lg">Join the AURA Inner Circle. Get early access to tickets, exclusive merch, and backstage virtual passes.</p>
+                        </div>
+                        <div class="flex w-full md:w-auto items-center glass p-2 rounded-2xl bg-white/10">
+                            <input class="bg-transparent border-none focus:ring-0 text-white placeholder-indigo-200 px-6 w-full md:w-64" placeholder="your@email.com" type="email"/>
+                            <button class="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-indigo-50 transition-colors">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <footer class="border-t border-slate-200 dark:border-white/5 py-12 px-8 bg-slate-50 dark:bg-transparent mt-20">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-slate-900 dark:bg-slate-100 rounded-lg flex items-center justify-center">
+                            <span class="material-icons text-white dark:text-indigo-600 text-sm">north</span>
+                        </div>
+                        <span class="font-bold tracking-tighter uppercase text-sm dark:text-white">AURA STREAMING</span>
+                    </div>
+                    <div class="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
+                        <a class="hover:text-primary transition-colors" href="#">Privacy</a>
+                        <a class="hover:text-primary transition-colors" href="#">Terms</a>
+                        <a class="hover:text-primary transition-colors" href="#">Contact</a>
+                        <a class="hover:text-primary transition-colors" href="#">Artists</a>
+                    </div>
+                    <p class="text-xs text-slate-400 font-medium">© 2026 Aura Music Group. All rights reserved.</p>
+                </div>
+            </footer>
+        </main>
+
+        <!-- ==================== PREMIUM VIEW ==================== -->
+        <main id="premium-view" class="max-w-7xl mx-auto px-6 py-8 hidden-view">
+            <div class="max-w-4xl mx-auto text-center mb-16 mt-8">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass mb-8 border border-primary/20">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-blue-400">Limited Time Offer</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-display font-black tracking-tight mb-6 dark:text-white">
+                    HEAR THE <br/>
+                    <span class="text-gradient-premium">DIFFERENCE.</span>
+                </h1>
+                <p class="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto font-medium">
+                    Choose the plan that fits your frequency. High-fidelity audio, spatial sound, and zero interruptions.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch mb-20">
+                <!-- Basic Plan -->
+                <div class="glass p-8 rounded-[2rem] flex flex-col group hover:border-primary/30 transition-all duration-500">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-2 dark:text-white">Basic</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-black dark:text-white">$9.99</span>
+                            <span class="text-slate-500 font-medium">/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span>Ad-free listening</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span>Standard audio quality</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500">
+                            <span class="material-icons-round text-slate-400 text-lg">radio_button_unchecked</span>
+                            <span>1 Account</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500">
+                            <span class="material-icons-round text-slate-400 text-lg">radio_button_unchecked</span>
+                            <span>No offline downloads</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase glass hover:bg-slate-200 dark:hover:bg-white/10 transition-all dark:text-white">
+                        Start Basic
+                    </button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="glass p-8 rounded-[2rem] flex flex-col relative glow-gold border-yellow-500/30 scale-105 z-10 bg-gradient-to-b from-white/[0.05] to-transparent">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black text-[10px] font-black tracking-widest uppercase px-6 py-1.5 rounded-full shadow-lg shadow-yellow-500/40">
+                        Most Popular
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-500">Pro</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-black dark:text-white">$14.99</span>
+                            <span class="text-slate-500 font-medium">/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-200">
+                            <span class="material-icons-round text-yellow-500 text-lg">check_circle</span>
+                            <span class="font-semibold">Hi-Fi Lossless Audio</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-200">
+                            <span class="material-icons-round text-yellow-500 text-lg">check_circle</span>
+                            <span>Spatial Audio 2.0</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-200">
+                            <span class="material-icons-round text-yellow-500 text-lg">check_circle</span>
+                            <span>Offline Downloads</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-200">
+                            <span class="material-icons-round text-yellow-500 text-lg">check_circle</span>
+                            <span>Ad-free everywhere</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase bg-primary text-white hover:opacity-90 transition-all shadow-lg shadow-primary/25">
+                        Go Pro Now
+                    </button>
+                </div>
+
+                <!-- Family Plan -->
+                <div class="glass p-8 rounded-[2rem] flex flex-col group hover:border-primary/30 transition-all duration-500">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-2 dark:text-white">Family</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-black dark:text-white">$19.99</span>
+                            <span class="text-slate-500 font-medium">/mo</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span class="font-semibold">Up to 6 accounts</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span>Aura Kids app access</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span>Shared Family Mix</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm dark:text-slate-300">
+                            <span class="material-icons-round text-primary text-lg">check_circle</span>
+                            <span>Explicit Content Filter</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase glass hover:bg-slate-200 dark:hover:bg-white/10 transition-all dark:text-white">
+                        Start Family
+                    </button>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto text-center mb-16">
+                <p class="text-slate-500 text-sm font-medium italic">
+                    All plans include a 30-day free trial for new members. No commitments, cancel anytime.
+                </p>
+                <div class="mt-8 flex flex-wrap justify-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                    <img alt="Visa" class="h-6 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVQOCJQNAdeAODzMa9t9eC9DEvdUOrKZYPjOksgy--fXhoGfElks2jIc3Qzc1qyko68KFeR6v6r1sEt_DyrC2x7z0bb14z_1--RcMgZ7p3MMoggvAvYwLHjnCj8_IKK8et1PQPyapzxvFm0VFm0B_H-tA_2AxD29HSKsbouvqx2sl8roWyq61n0GkkiJdnftAHyEMTgR6o4NiRqldUgMQ3c1woa_5d0tMAnPS5_8hQXaIl-SSYDebvDHMsvmVvi6C_EHvqBiOUd9g"/>
+                    <img alt="Mastercard" class="h-6 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpbKOrtiq4KELg_3nKvioqTvJhMgvuKtRNieGTdJj5AIQ4U1TgpHAcz21MCga4vprOtmSRrY46zJmsUnhv5Nc2a5FeXPwB_rGquzkKZshsrv5ueZgO849IXQ1awemINVVk1Zwb7hnQB3HvhpicRClexoZGAjI2LkSLSAQTmSx9Fs_gjXW9kzacH5ieILIsFLecNX0vWJ2-NpCBmGwKaF6R048HqGGFMMhh0ncyDQshZTR0rDpN1cRDHlWbhxsMzpiO3NtsumQ8nCs"/>
+                    <img alt="Paypal" class="h-6 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChTMT17uwxt0Sca8j0Ztz4HD3wf5Do1Co0-AW6ovXK6DnHKLtaWo0B9iQ9W9CnYqvvQhcapVPhjHlsPXrJFcgu6takXe-A40NY-u7Xx_lhgHXeng5TZCwDSQWeM1H2kWyKTk5ZB4c8l-lA1YDfXmbZ00MNzQGv8CrBeCaZ4aELgPsk5FCQqHHyEIOYK0jDh88nEf1sMXOvOnHlksYvSVdWLXEoalYXc5qjq8TJw3QWkAmrIkZ0Uwfiq9o1Z2Niyn6CHsCQA4yCgos"/>
+                </div>
+            </div>
+
+            <footer class="border-t border-slate-200 dark:border-slate-800 pt-12 pb-20">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="flex items-center gap-3 opacity-50">
+                        <div class="w-6 h-6 bg-slate-900 dark:bg-white rounded-full flex items-center justify-center">
+                            <span class="material-icons-round text-white dark:text-slate-900 text-[10px] font-bold">arrow_upward</span>
+                        </div>
+                        <span class="text-sm font-black tracking-tighter uppercase dark:text-white">Aura</span>
+                    </div>
+                    <div class="flex gap-8 text-[10px] font-bold tracking-widest uppercase text-slate-500">
+                        <a class="hover:text-primary transition-colors cursor-pointer">Privacy Policy</a>
+                        <a class="hover:text-primary transition-colors cursor-pointer">Terms of Service</a>
+                        <a class="hover:text-primary transition-colors cursor-pointer">Contact Support</a>
+                    </div>
+                    <div class="text-[10px] text-slate-500 font-medium">
+                        © 2026 Aura Music Collective. Built for the sound.
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- PERSISTENT PLAYER -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl glass rounded-[24px] p-4 flex items-center justify-between shadow-2xl z-[60] border border-white/10 backdrop-blur-xl bg-black/40">
+        <div class="flex items-center gap-4">
+            <img alt="Currently Playing" class="w-12 h-12 rounded-xl object-cover shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLMNvbNTMGl6sDN_CFb95EWYBUFQuFiUjQqhIXtf2HJvdSsuOD-XbZ8YLXY4-eQQ-ZM1ihXWHsLIUY2YrkWbFOUt4_J_H_3vQ5NFhmM3nw9ixdhaicwec4L8necltvNeuOKzrUJHM-gaGe1QkYGHEXwwMdoUE-nmXobF2Q_fFM6CKt0FKGbKZCnbvxIyYtIoc0BYf_h78NC8li7sM2QDSkpNsrmmn7dFlZc2ESgjbFwz5ajMjp2F5wXOfR2nyyGX8DL4Tpi275MHM"/>
+            <div>
+                <h4 class="text-sm font-bold text-white leading-tight">Gridrunner</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Digital Shadows</p>
+            </div>
+        </div>
+        
+        <div class="flex flex-col items-center gap-2 flex-1 max-w-md px-4 md:px-8">
+            <div class="flex items-center gap-6">
+                <button class="material-icons-round text-slate-400 hover:text-white transition-colors text-xl">shuffle</button>
+                <button class="material-icons-round text-slate-400 hover:text-white transition-colors text-2xl">skip_previous</button>
+                <button class="w-10 h-10 rounded-full bg-white text-background-dark flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-white/20">
+                    <span class="material-icons-round text-xl">pause</span>
+                </button>
+                <button class="material-icons-round text-slate-400 hover:text-white transition-colors text-2xl">skip_next</button>
+                <button class="material-icons-round text-slate-400 hover:text-white transition-colors text-xl">repeat</button>
+            </div>
+            <div class="w-full flex items-center gap-3">
+                <span class="text-[10px] text-slate-500 font-mono">1:45</span>
+                <div class="h-1 flex-1 bg-white/10 rounded-full overflow-hidden relative group cursor-pointer">
+                    <div class="absolute inset-y-0 left-0 bg-primary w-1/3 rounded-full shadow-[0_0_8px_#6366f1]"></div>
+                    <div class="absolute left-1/3 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <span class="text-[10px] text-slate-500 font-mono">5:12</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4 hidden md:flex">
+            <button class="material-icons-round text-slate-400 hover:text-white transition-colors text-sm">playlist_play</button>
+            <div class="flex items-center gap-2 group cursor-pointer">
+                <span class="material-icons-round text-slate-400 text-sm group-hover:text-white transition-colors">volume_up</span>
+                <div class="w-20 h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-slate-300 w-3/4 rounded-full group-hover:bg-primary transition-colors"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Switcher Script -->
+    <script>
+        function switchTab(tabName) {
+            const libraryView = document.getElementById('library-view');
+            const premiumView = document.getElementById('premium-view');
+            const liveView = document.getElementById('live-view');
+            const discoverView = document.getElementById('discover-view');
+            
+            const navLibrary = document.getElementById('nav-library');
+            const navPremium = document.getElementById('nav-premium');
+            const navLive = document.getElementById('nav-live');
+            const navDiscover = document.getElementById('nav-discover');
+            
+            // Helper to reset all
+            [libraryView, premiumView, liveView, discoverView].forEach(view => {
+                view.classList.add('hidden-view');
+                view.classList.remove('visible-view');
+            });
+            
+            [navLibrary, navPremium, navLive, navDiscover].forEach(nav => {
+                nav.classList.remove('active-tab', 'text-slate-900', 'dark:text-white');
+                nav.classList.add('text-slate-500');
+            });
+
+            // Activate specific tab
+            if (tabName === 'library') {
+                libraryView.classList.remove('hidden-view');
+                libraryView.classList.add('visible-view');
+                
+                navLibrary.classList.add('active-tab', 'text-slate-900', 'dark:text-white');
+                navLibrary.classList.remove('text-slate-500');
+            } else if (tabName === 'premium') {
+                premiumView.classList.remove('hidden-view');
+                premiumView.classList.add('visible-view');
+                
+                navPremium.classList.add('active-tab', 'text-slate-900', 'dark:text-white');
+                navPremium.classList.remove('text-slate-500');
+            } else if (tabName === 'live') {
+                liveView.classList.remove('hidden-view');
+                liveView.classList.add('visible-view');
+                
+                navLive.classList.add('active-tab', 'text-slate-900', 'dark:text-white');
+                navLive.classList.remove('text-slate-500');
+            } else if (tabName === 'discover') {
+                discoverView.classList.remove('hidden-view');
+                discoverView.classList.add('visible-view');
+                
+                navDiscover.classList.add('active-tab', 'text-slate-900', 'dark:text-white');
+                navDiscover.classList.remove('text-slate-500');
+            }
+            
+            // Scroll to top when switching
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

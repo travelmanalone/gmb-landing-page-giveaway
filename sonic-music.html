@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SONIC ARCHITECT | Immersive Sound Design</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b1d91", /* Deep Purple */
+                        "secondary": "#1ABC9C", /* Teal */
+                        "accent": "#ff6b6b", /* Coral Pink */
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0d051a", /* Void Purple */
+                        "nebula": "#1a0b2e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', boxShadow: '0 0 20px rgba(91, 29, 145, 0.4)' },
+                            '50%': { opacity: '1', boxShadow: '0 0 40px rgba(26, 188, 156, 0.6)' },
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #0d051a;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .nebula-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(91, 29, 145, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(26, 188, 156, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.15) 0%, transparent 70%),
+                        #0d051a;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+        }
+        
+        .glass-panel {
+            background: rgba(49, 42, 55, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .waveform-bar {
+            transition: height 0.2s ease;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #1ABC9C;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0d051a; }
+        ::-webkit-scrollbar-thumb { background: #5b1d91; border-radius: 3px; }
+
+        /* Loader */
+        #loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background-color: #0d051a;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+        #loader.hidden { opacity: 0; visibility: hidden; }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .menu-open { opacity: 1 !important; visibility: visible !important; }
+        
+        ::selection { background: #1ABC9C; color: #000; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Nebula Background Layer -->
+    <div class="nebula-bg"></div>
+
+    <!-- Audio Wave Loader -->
+    <div id="loader">
+        <div class="flex flex-col items-center gap-8">
+            <div class="flex items-end gap-1 h-12">
+                <div class="w-1.5 bg-primary rounded-full animate-[float_1s_ease-in-out_infinite] h-8"></div>
+                <div class="w-1.5 bg-secondary rounded-full animate-[float_1.2s_ease-in-out_infinite] h-12" style="animation-delay: 0.1s;"></div>
+                <div class="w-1.5 bg-accent rounded-full animate-[float_0.8s_ease-in-out_infinite] h-6" style="animation-delay: 0.2s;"></div>
+                <div class="w-1.5 bg-primary rounded-full animate-[float_1.5s_ease-in-out_infinite] h-10" style="animation-delay: 0.3s;"></div>
+                <div class="w-1.5 bg-secondary rounded-full animate-[float_1.1s_ease-in-out_infinite] h-4" style="animation-delay: 0.4s;"></div>
+            </div>
+            <div class="text-center">
+                <h2 class="text-sm font-bold tracking-[0.4em] uppercase text-white/80 animate-pulse">Initializing Audio Engine</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full z-50 border-b border-white/5 bg-background-dark/60 backdrop-blur-md transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="size-8 flex items-center justify-center text-secondary animate-spin-slow">
+                    <svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 4L4 44L24 36L44 44L24 4Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+                        <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"></circle>
+                    </svg>
+                </div>
+                <h1 class="text-xs font-bold tracking-[0.3em] uppercase">Sonic Architect</h1>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-10">
+                <a class="nav-link text-[10px] uppercase font-bold tracking-widest text-white/70 hover:text-secondary transition-colors" href="#soundscapes">Soundscapes</a>
+                <a class="nav-link text-[10px] uppercase font-bold tracking-widest text-white/70 hover:text-secondary transition-colors" href="#studio">Studio</a>
+                <a class="nav-link text-[10px] uppercase font-bold tracking-widest text-white/70 hover:text-secondary transition-colors" href="#transmission">Transmission</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('transmission').scrollIntoView()" class="hidden md:block px-6 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-[10px] uppercase tracking-widest font-bold hover:shadow-[0_0_20px_rgba(26,188,156,0.4)] transition-all transform hover:scale-105">
+                    Start Project
+                </button>
+                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-secondary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">graphic_eq</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[40] bg-nebula/95 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 invisible">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white/50 hover:text-secondary transition-colors">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <div class="flex flex-col gap-10 text-center">
+            <span class="text-secondary text-[10px] uppercase tracking-[0.4em] mb-4 border-b border-white/10 pb-4">Frequency Modulation</span>
+            <a class="text-3xl font-light tracking-tight text-white hover:text-secondary transition-colors" href="#soundscapes" onclick="toggleMenu()">Soundscapes</a>
+            <a class="text-3xl font-light tracking-tight text-white hover:text-secondary transition-colors" href="#studio" onclick="toggleMenu()">The Studio</a>
+            <a class="text-3xl font-light tracking-tight text-white hover:text-secondary transition-colors" href="#transmission" onclick="toggleMenu()">Transmission</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <main class="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20">
+        <!-- Floating Elements -->
+        <div class="absolute top-1/4 left-10 w-32 h-32 bg-primary/20 rounded-full blur-[60px] animate-float"></div>
+        <div class="absolute bottom-1/4 right-10 w-48 h-48 bg-secondary/10 rounded-full blur-[80px] animate-float" style="animation-delay: 2s;"></div>
+
+        <!-- Center Content -->
+        <div class="max-w-4xl w-full text-center z-10 space-y-8" data-aos="zoom-out" data-aos-duration="1500">
+            <div class="space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                    <span class="text-[9px] uppercase tracking-widest text-white/70">Audio Engine v2.0 Online</span>
+                </div>
+                <h2 class="text-5xl md:text-8xl font-light tracking-tight text-glow leading-none">
+                    Architecting the <br/>
+                    <span class="font-extrabold italic bg-clip-text text-transparent bg-gradient-to-r from-white via-secondary to-primary animate-gradient bg-[length:200%_auto]">Shapes of Sound</span>
+                </h2>
+            </div>
+            <p class="max-w-xl mx-auto text-white/60 text-lg font-light leading-relaxed">
+                A bespoke audio-visual studio crafting immersive sonic identities for the future of digital experiences. We turn silence into emotion.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+                <button onclick="document.getElementById('soundscapes').scrollIntoView()" class="group relative px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full overflow-hidden transition-all hover:border-secondary/50">
+                    <div class="absolute inset-0 w-0 bg-secondary/20 transition-all duration-[250ms] ease-out group-hover:w-full"></div>
+                    <span class="relative text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                        Explore Works <span class="material-symbols-outlined text-sm">arrow_downward</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Glassmorphic Visualizer Panel -->
+        <div class="mt-20 w-full max-w-5xl z-20" data-aos="fade-up" data-aos-delay="500">
+            <div class="glass-panel rounded-2xl p-6 flex flex-col md:flex-row items-center gap-8 border-t border-white/10">
+                <!-- Player Control -->
+                <div class="flex items-center gap-5 pr-8 border-r border-white/10 shrink-0 w-full md:w-auto justify-between md:justify-start">
+                    <div class="flex items-center gap-5">
+                        <div class="relative size-14 rounded-xl overflow-hidden group cursor-pointer border border-white/10">
+                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsm_J9TJxSeA6AgmVmQIpDxI_ZeS1NFBU6452YiKgiCZ3bbQEnOM77sP1u7KLVUtVdyWrx0F-FvEtP6mUlhqFjhCKvhui91xiFSrPPya1XgUwLKAoquT4GDxKkCSEtkJ7GRfx-oLU4yiV5L2hK60obHQvoewq4q8IH0HhH1HO7DZJuk6AeCCEgHq5ODU5ZPRYmgA4o_Ogo3b7cPHrgnUt2kzBSQDSdvWswlge9epSvIry6yJiDRwi5YjUysaA_QMn77RUIpjGnS5s')"></div>
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-primary/40 transition-colors">
+                                <span class="material-symbols-outlined text-white">play_arrow</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold tracking-wide uppercase text-secondary">Neon Horizon</p>
+                            <p class="text-[10px] text-white/50 uppercase tracking-widest">Stereo • 48kHz • 24bit</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Waveform Visualizer -->
+                <div class="flex-1 w-full flex items-center gap-1 h-12 px-2 overflow-hidden mask-linear">
+                    <!-- Generating bars with loop for brevity in HTML -->
+                    <div class="w-1 bg-secondary/40 h-4 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary/60 h-8 rounded-full animate-[pulse_1.2s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary/80 h-6 rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary h-10 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary h-5 rounded-full animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-white/80 h-9 rounded-full animate-[pulse_1.3s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary h-7 rounded-full animate-[pulse_0.9s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary/70 h-4 rounded-full animate-[pulse_1.4s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary/60 h-8 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary h-12 rounded-full animate-[pulse_1.6s_ease-in-out_infinite]"></div>
+                    <!-- Repeat pattern slightly varied -->
+                    <div class="w-1 bg-white/40 h-6 rounded-full animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary h-10 rounded-full animate-[pulse_1.3s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary h-5 rounded-full animate-[pulse_0.9s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary/80 h-8 rounded-full animate-[pulse_1.4s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary/60 h-4 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                     <div class="w-1 bg-white/40 h-6 rounded-full animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary h-10 rounded-full animate-[pulse_1.3s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary h-5 rounded-full animate-[pulse_0.9s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary/80 h-8 rounded-full animate-[pulse_1.4s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary/60 h-4 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                     <div class="w-1 bg-white/40 h-6 rounded-full animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary h-10 rounded-full animate-[pulse_1.3s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary h-5 rounded-full animate-[pulse_0.9s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-primary/80 h-8 rounded-full animate-[pulse_1.4s_ease-in-out_infinite]"></div>
+                    <div class="w-1 bg-secondary/60 h-4 rounded-full animate-[pulse_1s_ease-in-out_infinite]"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- NEW SECTION: Soundscapes (Projects) -->
+    <section id="soundscapes" class="py-32 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8" data-aos="fade-up">
+            <div>
+                <span class="text-secondary text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Portfolio</span>
+                <h2 class="text-4xl md:text-5xl font-light text-white">Sonic <span class="italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Landscapes</span></h2>
+            </div>
+            <a href="#" class="text-[10px] font-bold uppercase tracking-widest text-white/50 hover:text-white transition-colors border-b border-white/20 pb-1">View Full Archive</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Project 1 -->
+            <div class="group relative rounded-xl overflow-hidden glass-panel border-0 hover:shadow-[0_0_30px_rgba(91,29,145,0.3)] transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
+                <div class="aspect-square bg-black relative">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+                    <button class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-primary">
+                        <span class="material-symbols-outlined text-3xl">play_arrow</span>
+                    </button>
+                </div>
+                <div class="p-6 absolute bottom-0 left-0 w-full">
+                    <p class="text-[10px] text-secondary font-bold uppercase tracking-widest mb-1">Film Score</p>
+                    <h3 class="text-xl font-bold text-white mb-2">The Void Walker</h3>
+                    <p class="text-xs text-white/60 line-clamp-2">Dark ambient textures mixed with orchestral swells for a sci-fi thriller.</p>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="group relative rounded-xl overflow-hidden glass-panel border-0 hover:shadow-[0_0_30px_rgba(26,188,156,0.3)] transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
+                <div class="aspect-square bg-black relative">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+                    <button class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-secondary">
+                        <span class="material-symbols-outlined text-3xl">play_arrow</span>
+                    </button>
+                </div>
+                <div class="p-6 absolute bottom-0 left-0 w-full">
+                    <p class="text-[10px] text-secondary font-bold uppercase tracking-widest mb-1">Brand Identity</p>
+                    <h3 class="text-xl font-bold text-white mb-2">Lumina Tech</h3>
+                    <p class="text-xs text-white/60 line-clamp-2">Futuristic UI sounds and a memorable sonic logo for a tech startup.</p>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="group relative rounded-xl overflow-hidden glass-panel border-0 hover:shadow-[0_0_30px_rgba(255,107,107,0.3)] transition-all duration-500" data-aos="fade-up" data-aos-delay="300">
+                <div class="aspect-square bg-black relative">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1478737270239-2f02b77ac6d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+                    <button class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-accent">
+                        <span class="material-symbols-outlined text-3xl">play_arrow</span>
+                    </button>
+                </div>
+                <div class="p-6 absolute bottom-0 left-0 w-full">
+                    <p class="text-[10px] text-secondary font-bold uppercase tracking-widest mb-1">Immersive</p>
+                    <h3 class="text-xl font-bold text-white mb-2">Forest of Echoes</h3>
+                    <p class="text-xs text-white/60 line-clamp-2">3D binaural audio experience for a virtual reality meditation app.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: The Studio (Services) -->
+    <section id="studio" class="py-32 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div data-aos="fade-right">
+                <span class="text-secondary text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Capabilities</span>
+                <h2 class="text-4xl font-light text-white mb-8 leading-tight">We build worlds with <br/><span class="font-bold text-primary">frequency</span> & <span class="font-bold text-secondary">vibration.</span></h2>
+                <p class="text-white/60 leading-relaxed mb-8 font-light">
+                    Our studio is equipped with state-of-the-art analog synthesisers and digital processing units. We combine old-school warmth with modern precision to create unique sonic textures.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-4 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-secondary">graphic_eq</span>
+                        Sound Design & Synthesis
+                    </li>
+                    <li class="flex items-center gap-4 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-secondary">spatial_audio_off</span>
+                        Spatial & Binaural Audio (VR/AR)
+                    </li>
+                    <li class="flex items-center gap-4 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-secondary">piano</span>
+                        Original Composition & Scoring
+                    </li>
+                    <li class="flex items-center gap-4 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-secondary">settings_voice</span>
+                        Mixing & Mastering
+                    </li>
+                </ul>
+            </div>
+            <div class="relative" data-aos="fade-left">
+                <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary opacity-20 blur-xl rounded-full animate-pulse-glow"></div>
+                <div class="relative glass-panel rounded-2xl p-2">
+                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Studio Equipment" class="rounded-xl w-full h-auto shadow-2xl opacity-90">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Transmission (Contact) -->
+    <section id="transmission" class="py-32 px-6 max-w-4xl mx-auto text-center">
+        <div class="glass-panel p-12 md:p-20 rounded-3xl relative overflow-hidden" data-aos="zoom-in">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient bg-[length:200%_auto]"></div>
+            
+            <div class="relative z-10">
+                <span class="material-symbols-outlined text-5xl text-white/20 mb-6">satellite_alt</span>
+                <h2 class="text-3xl md:text-5xl font-light text-white mb-6">Initiate Transmission</h2>
+                <p class="text-white/50 mb-12 max-w-lg mx-auto">Ready to shape the sound of your next project? Send us a signal and we will respond on the next frequency.</p>
+                
+                <form class="flex flex-col gap-6 max-w-md mx-auto" onsubmit="event.preventDefault(); alert('Signal Transmitted. Stand by for response.');">
+                    <div class="relative group">
+                        <input type="email" placeholder="Your Frequency (Email)" class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-white placeholder-white/30 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all group-hover:bg-white/10">
+                    </div>
+                    <button class="w-full bg-white text-background-dark font-bold uppercase tracking-widest py-4 rounded-full hover:bg-secondary hover:text-white transition-all transform hover:scale-[1.02] shadow-lg">
+                        Send Signal
+                    </button>
+                </form>
+                
+                <div class="mt-12 flex justify-center gap-8 text-white/30">
+                    <a href="#" class="hover:text-secondary transition-colors text-xs uppercase tracking-widest">Instagram</a>
+                    <a href="#" class="hover:text-secondary transition-colors text-xs uppercase tracking-widest">SoundCloud</a>
+                    <a href="#" class="hover:text-secondary transition-colors text-xs uppercase tracking-widest">Vimeo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 text-center border-t border-white/5">
+        <div class="flex flex-col items-center gap-4">
+            <div class="size-8 flex items-center justify-center text-white/20">
+                <svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4L4 44L24 36L44 44L24 4Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+            </div>
+            <p class="text-[10px] text-white/30 uppercase tracking-[0.2em]">© 2024 Sonic Architect Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Init AOS
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 1000,
+            easing: 'ease-out-cubic',
+        });
+
+        // Loader Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMenu() {
+            if (mobileMenu.classList.contains('menu-open')) {
+                mobileMenu.classList.remove('menu-open');
+                document.body.style.overflow = '';
+            } else {
+                mobileMenu.classList.add('menu-open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-background-dark/90', 'border-secondary/20');
+                navbar.classList.remove('bg-background-dark/60', 'border-white/5');
+            } else {
+                navbar.classList.remove('bg-background-dark/90', 'border-secondary/20');
+                navbar.classList.add('bg-background-dark/60', 'border-white/5');
+            }
+        });
+    </script>
+</body>
+</html>

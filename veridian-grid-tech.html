@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>VERIDIAN GRID | Planetary Energy Interface</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9ef91f", /* Neon Lime */
+                        "primary-dim": "rgba(158, 249, 31, 0.1)",
+                        "background-light": "#f1f4f3",
+                        "background-dark": "#101115",
+                        "emerald-deep": "#182924",
+                        "obsidian": "#0A0B0E",
+                        "alert": "#ff4d4d",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                    },
+                    keyframes: {
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #101115;
+            overflow-x: hidden;
+        }
+        
+        .bio-glass {
+            background: rgba(24, 41, 36, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #323a27;
+        }
+        
+        .neobrutal-border {
+            border: 1px solid #323a27;
+        }
+        
+        .cyber-glow {
+            box-shadow: 0 0 15px rgba(158, 249, 31, 0.2);
+        }
+        
+        .grid-blueprint {
+            background-image: linear-gradient(#323a27 1px, transparent 1px), linear-gradient(90deg, #323a27 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .text-stroke {
+            -webkit-text-stroke: 1px #9ef91f;
+            color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #101115; }
+        ::-webkit-scrollbar-thumb { background: #9ef91f; border-radius: 2px; }
+
+        /* Loader */
+        #loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background-color: #101115;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        #loader.hidden { opacity: 0; visibility: hidden; }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .menu-open { transform: translateX(0) !important; }
+        
+        ::selection { background: #9ef91f; color: #000; }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-white selection:bg-primary selection:text-black">
+
+    <!-- Grid Boot Loader -->
+    <div id="loader">
+        <div class="flex flex-col items-center gap-6 w-72">
+            <div class="flex justify-between w-full text-xs font-mono text-primary mb-1">
+                <span>SYSTEM_BOOT</span>
+                <span>v4.2.0</span>
+            </div>
+            <div class="w-full h-2 bg-emerald-deep rounded-sm overflow-hidden border border-primary/30">
+                <div class="h-full bg-primary animate-[width_2s_ease-in-out_infinite]" style="width: 100%; animation: width 2s ease-in-out infinite;"></div>
+            </div>
+            <div class="w-full text-[10px] font-mono text-white/40 space-y-1">
+                <p>&gt; CONNECTING_TO_SATELLITE... [OK]</p>
+                <p>&gt; SYNCING_TURBINE_DATA... [OK]</p>
+                <p>&gt; OPTIMIZING_POWER_FLOW... [OK]</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 px-6 py-4 transition-all duration-300" id="navbar">
+        <nav class="max-w-[1440px] mx-auto flex items-center justify-between bio-glass px-6 py-3 rounded-lg border border-white/10">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="w-8 h-8 bg-primary flex items-center justify-center rounded-sm animate-pulse-fast">
+                    <span class="material-symbols-outlined text-black font-bold">bolt</span>
+                </div>
+                <h2 class="text-xl font-bold tracking-tighter text-white uppercase">Veridian <span class="text-primary text-xs tracking-widest ml-1">GRID</span></h2>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-primary transition-colors" href="#grid">Infrastructure</a>
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-primary transition-colors" href="#telemetry">Telemetry</a>
+                <a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-primary transition-colors" href="#access">Access</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('access').scrollIntoView()" class="hidden md:flex items-center gap-2 px-5 py-2 bg-primary text-black font-bold text-[10px] tracking-widest uppercase rounded-sm hover:bg-white transition-all shadow-[4px_4px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
+                    Access Terminal
+                </button>
+                <div class="w-10 h-10 rounded-sm border border-white/20 bg-emerald-deep overflow-hidden">
+                    <img class="w-full h-full object-cover grayscale opacity-70" alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe6Knw5QsYYgn9tH3NJCtchyI2gH4NyhYNGiHKYbaRcPvaHjPonNRws0XNqxTyEyTgAgswUtEcZfG936Ch5EnpctKDC2lPWsFUH4rH21rhUw_b9TKFBQeO3SSsMIfPsEMXWewZcjcOYttyK0MuB-I2qrpZ9Rq3SchkMQLmveKOgtKXtv0A37_SDNvU3z291wzyMRBBIz9FUJ6v0mxaz4QqPqKeWgMLWpOJyiw7UzTQ8lVyteVdigFgeQCZSE40NZwCoQy-KcbQkl8"/>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">menu_open</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 z-[40] bg-background-dark/95 backdrop-blur-xl transform translate-x-full flex flex-col items-center justify-center border-l border-primary/20">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <div class="flex flex-col gap-10 text-center w-full px-12">
+            <span class="text-primary text-[10px] font-mono uppercase tracking-[0.2em] border-b border-primary/20 pb-4 mb-2">System Navigation</span>
+            <a class="text-3xl font-black uppercase tracking-tight hover:text-primary hover:translate-x-2 transition-all" href="#hero" onclick="toggleMenu()">Dashboard</a>
+            <a class="text-3xl font-black uppercase tracking-tight hover:text-primary hover:translate-x-2 transition-all" href="#grid" onclick="toggleMenu()">Infrastructure</a>
+            <a class="text-3xl font-black uppercase tracking-tight hover:text-primary hover:translate-x-2 transition-all" href="#telemetry" onclick="toggleMenu()">Telemetry</a>
+            <a class="text-3xl font-black uppercase tracking-tight hover:text-primary hover:translate-x-2 transition-all" href="#access" onclick="toggleMenu()">Terminal Access</a>
+        </div>
+        <div class="absolute bottom-10 flex items-center gap-2 text-white/30 text-[10px] font-mono">
+            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+            SYSTEM ONLINE
+        </div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <div class="relative min-h-screen w-full flex flex-col overflow-hidden pt-28 pb-20">
+        <!-- Background Layer -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-obsidian/90 via-obsidian/60 to-obsidian z-10"></div>
+            <div class="w-full h-full bg-cover bg-center fixed" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDI4-yA1EfBXMbHAJNSyRgbb1vkeirEaS_WPxSaVWG-7VE1tAYEZHcXfZmgKSh4CiaYZDUChOgxE-q4hJTsr6jgVhHGKB92sW7qc-MVF5GvjrykoqHkP7XaAnHeXFhIXyn_PC0jCjNeLAuKjOXp8Pxutza3fuzj2VvOa3LqgPwVgrXinA9PcQg-WtNq5O7ZfxScH3Jlkxz84y6OjEDUAPNgu4ckVJCj-u-N6oDUBHCMK2T3_IyL_Xb7HBsIW9YFds091QSsVmixJsc');"></div>
+            <div class="absolute inset-0 grid-blueprint opacity-10 z-0 pointer-events-none"></div>
+        </div>
+
+        <div class="relative z-20 max-w-[1440px] mx-auto w-full px-6 flex flex-col gap-24">
+            
+            <!-- Hero Section -->
+            <section id="hero" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end min-h-[60vh]">
+                <div class="col-span-1 lg:col-span-8 flex flex-col gap-8" data-aos="fade-right">
+                    <div>
+                        <div class="inline-flex items-center gap-3 mb-6 px-3 py-1 rounded border border-primary/20 bg-primary/5">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#9ef91f]"></span>
+                            <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-primary">System Live: v4.2.0</span>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl lg:text-9xl font-black leading-[0.9] tracking-tighter uppercase mb-6 text-white">
+                            Architecting <br/>
+                            <span class="text-stroke">The Earth's</span> <br/>
+                            New Pulse.
+                        </h1>
+                        <p class="max-w-xl text-lg text-white/60 font-medium leading-relaxed border-l-2 border-primary/50 pl-6">
+                            Revolutionizing renewable grid management through high-precision 3D visualization, quantum-grade forecasting, and real-time carbon data integration.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="document.getElementById('grid').scrollIntoView()" class="px-8 py-4 bg-primary text-black font-bold text-sm tracking-widest uppercase rounded-sm hover:translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_#fff] transition-all">
+                            Explore Active Grid
+                        </button>
+                        <button class="px-8 py-4 bio-glass text-white font-bold text-sm tracking-widest uppercase rounded-sm hover:bg-white hover:text-black transition-all border border-white/10">
+                            Technical Specs
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-span-1 lg:col-span-4 flex flex-col gap-4" data-aos="fade-left">
+                    <!-- Stats Card -->
+                    <div class="bio-glass p-6 rounded-lg neobrutal-border hover:border-primary/50 transition-colors group">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Output</span>
+                            <span class="material-symbols-outlined text-primary group-hover:rotate-12 transition-transform">bolt</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-black text-white tabular-nums">4.82</span>
+                            <span class="text-sm font-bold text-white/60">GW</span>
+                        </div>
+                        <div class="w-full bg-white/10 h-1 mt-4 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[78%]"></div>
+                        </div>
+                    </div>
+                    <!-- Carbon Card -->
+                    <div class="bio-glass p-6 rounded-lg neobrutal-border hover:border-primary/50 transition-colors group">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Carbon Offset</span>
+                            <span class="material-symbols-outlined text-primary group-hover:rotate-12 transition-transform">eco</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-black text-white tabular-nums">1.2</span>
+                            <span class="text-sm font-bold text-white/60">M Tons</span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2 text-[10px] font-bold text-primary">
+                            <span class="material-symbols-outlined text-xs">trending_up</span> +12.4% vs Last Year
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEW SECTION: Grid Infrastructure -->
+            <section id="grid" data-aos="fade-up">
+                <div class="flex items-end justify-between mb-8 border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="text-3xl font-black uppercase tracking-tighter text-white">Active <span class="text-primary text-stroke">Infrastructure</span></h3>
+                        <p class="text-white/40 text-xs font-mono mt-2">Real-time asset monitoring and status.</p>
+                    </div>
+                    <div class="hidden md:flex items-center gap-2 text-[10px] font-mono text-primary animate-pulse">
+                        <span class="w-2 h-2 bg-primary rounded-full"></span> LIVE FEED
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Asset 1 -->
+                    <div class="bio-glass p-5 rounded-sm border border-white/10 hover:border-primary transition-all group cursor-pointer">
+                        <div class="aspect-video bg-black/40 mb-4 rounded-sm overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                            <div class="absolute top-2 right-2 px-2 py-0.5 bg-primary/20 text-primary text-[8px] font-bold uppercase tracking-widest border border-primary/30 rounded-sm">Operational</div>
+                        </div>
+                        <h4 class="text-lg font-bold uppercase tracking-tight text-white mb-1">Turbine Array Alpha</h4>
+                        <p class="text-[10px] text-white/40 font-mono mb-4">Sector: North Sea • Output: 98%</p>
+                        <div class="grid grid-cols-3 gap-1 mt-auto">
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary/30 rounded-sm"></div>
+                        </div>
+                    </div>
+                    <!-- Asset 2 -->
+                    <div class="bio-glass p-5 rounded-sm border border-white/10 hover:border-primary transition-all group cursor-pointer">
+                        <div class="aspect-video bg-black/40 mb-4 rounded-sm overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1472&q=80" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                            <div class="absolute top-2 right-2 px-2 py-0.5 bg-primary/20 text-primary text-[8px] font-bold uppercase tracking-widest border border-primary/30 rounded-sm">Peaking</div>
+                        </div>
+                        <h4 class="text-lg font-bold uppercase tracking-tight text-white mb-1">Solar Field Beta</h4>
+                        <p class="text-[10px] text-white/40 font-mono mb-4">Sector: Nevada • Output: 102%</p>
+                        <div class="grid grid-cols-3 gap-1 mt-auto">
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                        </div>
+                    </div>
+                    <!-- Asset 3 -->
+                    <div class="bio-glass p-5 rounded-sm border border-white/10 hover:border-alert transition-all group cursor-pointer">
+                        <div class="aspect-video bg-black/40 mb-4 rounded-sm overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                            <div class="absolute top-2 right-2 px-2 py-0.5 bg-alert/20 text-alert text-[8px] font-bold uppercase tracking-widest border border-alert/30 rounded-sm">Maintenance</div>
+                        </div>
+                        <h4 class="text-lg font-bold uppercase tracking-tight text-white mb-1">Hydro Node Gamma</h4>
+                        <p class="text-[10px] text-white/40 font-mono mb-4">Sector: Alps • Output: 45%</p>
+                        <div class="grid grid-cols-3 gap-1 mt-auto">
+                            <div class="h-1 bg-alert rounded-sm"></div>
+                            <div class="h-1 bg-alert/30 rounded-sm"></div>
+                            <div class="h-1 bg-white/10 rounded-sm"></div>
+                        </div>
+                    </div>
+                    <!-- Asset 4 -->
+                    <div class="bio-glass p-5 rounded-sm border border-white/10 hover:border-primary transition-all group cursor-pointer">
+                        <div class="aspect-video bg-black/40 mb-4 rounded-sm overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                            <div class="absolute top-2 right-2 px-2 py-0.5 bg-primary/20 text-primary text-[8px] font-bold uppercase tracking-widest border border-primary/30 rounded-sm">Charging</div>
+                        </div>
+                        <h4 class="text-lg font-bold uppercase tracking-tight text-white mb-1">Storage Array Delta</h4>
+                        <p class="text-[10px] text-white/40 font-mono mb-4">Sector: Grid Edge • Cap: 85%</p>
+                        <div class="grid grid-cols-3 gap-1 mt-auto">
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary rounded-sm"></div>
+                            <div class="h-1 bg-primary/50 rounded-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEW SECTION: Live Telemetry -->
+            <section id="telemetry" class="bio-glass border border-white/10 rounded-lg p-1 overflow-hidden" data-aos="zoom-in">
+                <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
+                    <h3 class="text-xl font-bold uppercase tracking-tight text-white">Grid <span class="text-primary">Telemetry</span></h3>
+                    <div class="flex gap-2">
+                        <span class="w-3 h-3 rounded-full bg-alert"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-primary"></span>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <!-- Fake Chart using CSS -->
+                    <div class="flex items-end justify-between h-64 gap-2 w-full">
+                        <div class="w-full bg-primary/20 h-[40%] rounded-t-sm hover:bg-primary/40 transition-all duration-300 relative group">
+                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">40%</div>
+                        </div>
+                        <div class="w-full bg-primary/30 h-[65%] rounded-t-sm hover:bg-primary/50 transition-all duration-300 relative group">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">65%</div>
+                        </div>
+                        <div class="w-full bg-primary/40 h-[55%] rounded-t-sm hover:bg-primary/60 transition-all duration-300 relative group">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">55%</div>
+                        </div>
+                        <div class="w-full bg-primary/20 h-[80%] rounded-t-sm hover:bg-primary/40 transition-all duration-300 relative group">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">80%</div>
+                        </div>
+                        <div class="w-full bg-primary/60 h-[95%] rounded-t-sm hover:bg-primary/80 transition-all duration-300 relative group shadow-[0_0_20px_rgba(158,249,31,0.2)]">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-primary font-bold opacity-100">PEAK</div>
+                        </div>
+                        <div class="w-full bg-primary/40 h-[70%] rounded-t-sm hover:bg-primary/60 transition-all duration-300 relative group">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">70%</div>
+                        </div>
+                        <div class="w-full bg-primary/20 h-[50%] rounded-t-sm hover:bg-primary/40 transition-all duration-300 relative group">
+                             <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">50%</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-4 text-[10px] font-mono text-white/30 uppercase tracking-widest border-t border-white/5 pt-2">
+                        <span>00:00</span>
+                        <span>06:00</span>
+                        <span>12:00</span>
+                        <span>18:00</span>
+                        <span>24:00</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEW SECTION: Operator Access (Login) -->
+            <section id="access" class="max-w-xl mx-auto w-full" data-aos="fade-up">
+                <div class="bio-glass p-1 rounded-sm border border-white/10 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+                    <div class="p-10 md:p-14">
+                        <div class="text-center mb-10">
+                            <span class="material-symbols-outlined text-4xl text-primary mb-4">encrypted</span>
+                            <h2 class="text-2xl font-black uppercase tracking-tight text-white">Operator <span class="text-primary">Access</span></h2>
+                            <p class="text-white/40 text-xs font-mono mt-2 uppercase tracking-widest">Authorized Personnel Only</p>
+                        </div>
+                        
+                        <form class="space-y-6 font-mono text-sm" onsubmit="event.preventDefault(); alert('Access Request Initiated. Handshake pending...');">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-[10px] uppercase text-primary font-bold tracking-widest">&gt; OPERATOR_ID</label>
+                                <input type="text" class="w-full bg-black/40 border border-white/10 p-4 text-white focus:border-primary focus:ring-0 focus:outline-none placeholder-white/10 transition-all rounded-sm uppercase" placeholder="ID-XXXX">
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-[10px] uppercase text-primary font-bold tracking-widest">&gt; ACCESS_KEY</label>
+                                <input type="password" class="w-full bg-black/40 border border-white/10 p-4 text-white focus:border-primary focus:ring-0 focus:outline-none placeholder-white/10 transition-all rounded-sm" placeholder="••••••••">
+                            </div>
+                            <button class="w-full py-4 bg-primary text-black font-bold uppercase tracking-[0.2em] hover:bg-white transition-all mt-4 border-2 border-transparent hover:border-primary rounded-sm shadow-[0_0_15px_rgba(158,249,31,0.3)]">
+                                Initiate Handshake
+                            </button>
+                            <div class="text-center text-[9px] text-white/20 mt-4 uppercase tracking-widest">
+                                Connection: Encrypted (TLS 1.3)
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Footer / Ticker -->
+    <footer class="fixed bottom-0 left-0 w-full z-40 bio-glass border-t border-[#323a27] py-3 overflow-hidden backdrop-blur-md">
+        <div class="flex whitespace-nowrap gap-12 animate-[marquee_20s_linear_infinite] items-center text-[10px] font-bold tracking-[0.2em] uppercase text-white/60">
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> GRID_LOAD: 84%</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> FREQUENCY: 50.02Hz</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> WIND_NORTH: OPTIMAL</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> SOLAR_YIELD: PEAKING</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> STORAGE: CHARGING</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> CARBON_SAVE: +12%</div>
+            <!-- Duplicate for loop -->
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> GRID_LOAD: 84%</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> FREQUENCY: 50.02Hz</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> WIND_NORTH: OPTIMAL</div>
+            <div class="flex items-center gap-3"><span class="text-primary">●</span> SOLAR_YIELD: PEAKING</div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Init AOS
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMenu() {
+            if (mobileMenu.classList.contains('menu-open')) {
+                mobileMenu.classList.remove('menu-open');
+                document.body.style.overflow = '';
+            } else {
+                mobileMenu.classList.add('menu-open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+
+        // Navbar Scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'border-primary/30');
+                navbar.classList.remove('bio-glass');
+            } else {
+                navbar.classList.remove('bg-black/90', 'border-primary/30');
+                navbar.classList.add('bio-glass');
+            }
+        });
+    </script>
+</body>
+</html>

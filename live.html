@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AURA | Live Shows &amp; Concerts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#8b5cf6",
+              "background-light": "#f8fafc",
+              "background-dark": "#0a0a12",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .aura-gradient {
+            background: radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+        }
+        .dark .aura-gradient {
+            background: radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 30%),
+                        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.2) 0%, transparent 40%);
+        }
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+            border-color: rgba(139, 92, 246, 0.8);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen aura-gradient transition-colors duration-300">
+<header class="fixed top-0 left-0 right-0 z-50 px-8 py-4">
+<nav class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-8 py-3">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-white dark:bg-slate-100 rounded-xl flex items-center justify-center">
+<span class="material-icons text-indigo-600 font-bold">north</span>
+</div>
+<span class="text-xl font-extrabold tracking-tighter uppercase ml-1">Aura</span>
+</div>
+<div class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1" href="#">Live Shows</a>
+<a class="hover:text-primary transition-colors" href="#">Library</a>
+<a class="hover:text-primary transition-colors" href="#">Premium</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons dark:hidden">dark_mode</span>
+<span class="material-icons hidden dark:block">light_mode</span>
+</button>
+<button class="px-6 py-2 border border-slate-300 dark:border-white/20 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-white hover:text-indigo-900 transition-all">
+                    Sign In
+                </button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-20 px-8 max-w-7xl mx-auto">
+<section class="mb-20">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="flex h-3 h-3 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+</span>
+<h2 class="text-2xl font-bold tracking-tight">Live Now</h2>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full glass hover:bg-primary transition-colors">
+<span class="material-icons">chevron_left</span>
+</button>
+<button class="p-2 rounded-full glass hover:bg-primary transition-colors">
+<span class="material-icons">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="relative group rounded-3xl overflow-hidden aspect-[21/9] shadow-2xl">
+<img alt="Live concert background" class="absolute inset-0 w-full h-full object-cover brightness-50 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfX5UKBY0Nut_Cg4sbMZqIRd9lt7J887-RTVGuvAIPAf6cNHAErjEY_w8_kAD94m_6l3rweyZ_zsM4NzZK51MPTGkAulShhcQL3nSPIzEo6NseiOJTZj9P2AWrzxX1uoU2FIbDA90E5NrPdvk-bevPP73T5ahvsYEk3X9eCldYkYIWiPWrad-5t2mhOaWVnqJi6nQkCtTGls8tb3-s9K1nk9tZlyrPxxEVT45yQ5RSrm231KeguzEVQOlixnp3SSHQ_0ts0SZZeUo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-4 max-w-2xl">
+<span class="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-lg text-xs font-bold uppercase tracking-widest backdrop-blur-md">
+                                Exclusive Performance
+                            </span>
+<h1 class="text-5xl md:text-7xl font-black uppercase tracking-tight leading-none text-white">
+                                Midnight <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-pink-500">Echoes</span>
+</h1>
+<p class="text-slate-300 text-lg font-medium max-w-md">
+                                Experience the virtual world tour live from Tokyo. Immersive 3D spatial audio enabled.
+                            </p>
+<div class="flex items-center gap-4 py-2">
+<div class="flex -space-x-2">
+<img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXg_Kwu1treGXcohtW6BqBjHjdjqTkA64nfRwB05-JuoOzO-MmuaIwwhoOxNmju3Ph82fDW3rqWRWP-jwARi_TGuWPy5xXpcDWftcC1BjAw8oHYxwJ_PQk9cMW6xtUBpql1m0Y3D8_OEyv4NixPn4GfJIb9q32ZXEDKbVmxduFyxsIDylnxnyxb-n4Fm_i_XU-I4YRqlGtOCuDAgSvUhpViEGa1ftEYSD6m17RvywTroZJp3q8basYnaZMF4eIcvDmjhQDX5apBrc"/>
+<img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5xeeIUNBV-I6cSj2BqIPJvblAUa2N-Zi4B3Xq2tsZJVVs1xPfeUiOa_BQd2a1k6_K2HdfiIeXS2vcKjQOTfXnpQ8gsekk8486QN4qxr7EjV3SAygc544EPyRvvxaZXr-yFLjFw0TX3gRX-ff3eVnGXLXu2bPlvMdRyZMzu2FkfQwqrQThKX1YhBn39AUpjXNNvK5msVrABcDr9lSk0YEGGY0-YcUQ2YXfZmJVQKIZaMmh4ymI_QDZRjMPOEYEd9BeOYWZbVyyWNY"/>
+<img alt="viewer" class="w-8 h-8 rounded-full border-2 border-slate-900" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHOqcHv3aLaSppt9DGWZo8M0XSwuF4kCwIdM7B9UmOqcl6Hh3t0PUgOMmpEixaiaU6yUgNSbB9AN5tkPZjJof2PYD1Q_5qEfFuRMPL0b4YJCrtaMGI1gywnYJxsMLEtbMP2rL9TOclipeVSy_mBpTJLfRynPlGDwXUaPe2TYDXtWMpftgpgsgeLZHB4yrcL0Xsrk2MzAwrQUKsICfMg8F5B0tRCMmGUTHamYklRkDIDbhBJCCsodZS-cuh3gAq710YZhgwrVKX8Jc"/>
+</div>
+<span class="text-slate-400 text-sm font-semibold">12.4k watching now</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1 flex items-center gap-2">
+<span class="material-icons">play_arrow</span>
+                                Join Stream
+                            </button>
+<button class="glass p-4 rounded-2xl hover:bg-white/10 transition-colors">
+<span class="material-icons">share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-10">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight">Upcoming Events</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Don't miss out on the next big beat.</p>
+</div>
+<div class="flex bg-slate-200 dark:bg-white/5 p-1 rounded-xl">
+<button class="px-4 py-2 bg-white dark:bg-white/10 rounded-lg text-xs font-bold uppercase shadow-sm">All</button>
+<button class="px-4 py-2 text-slate-500 text-xs font-bold uppercase hover:text-primary transition-colors">Virtual</button>
+<button class="px-4 py-2 text-slate-500 text-xs font-bold uppercase hover:text-primary transition-colors">In-Person</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+<div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+<img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuRqqgRzHk3XlrLqQ6bF0TPV9v-DWxLZBfMb4EceirgOAvq-5d9rxSzIyCr2xkCuB9o1pG45HjF0D9CrWXd-Vb7xlUx4GhFVGRp3yLLxw1Cou-LkVVE9evuwHhxDK4iNbGkAHVu8lTtKHYSFHHKXs9hbQxLcBruCZKZuTqLf8sBEhP7ER2uCwn2C30Zz757aD4cd6k_teNhGUbwB9sErB7eNo2mEO5rXMR87ep3eaPBghqQ7Na4QPtFHHO_Plv9HXV2Na5d-FDq4Q"/>
+<div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                            Sept 24
+                        </div>
+</div>
+<div class="px-2">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold">Neon Horizon</h3>
+<span class="text-primary font-bold">$24.00</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Electronic / Future Bass</p>
+<button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                            Get Tickets
+                        </button>
+</div>
+</div>
+<div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+<div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+<img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe8bjIOG2qflRKxoUNSS59B-zIpI8FfGhmZNErptHBt78JgeqYSSlFrF1P9GbHbe_9VqzGe7BKY_f-S5RQOLcmH5zM5Z63EkRCXaZU4xyJoGpTnaq8lG5q_G0ViEeIJigrTwgHQ3ZmGPpAqVrJ-UXTOclhlmvGhJc6pmIofVSrza3IQ58hTTpGcaP6B6JW8RfRqjt1wouR5T_3cPtYf3i-GA5otrcvJWK4xcpFvXOEbf2aZChxOrYj4DucnFClj-An4JzhZRP-o_k"/>
+<div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                            Oct 12
+                        </div>
+</div>
+<div class="px-2">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold">Soul Sessions</h3>
+<span class="text-primary font-bold">$18.00</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Indie / Soul / Jazz</p>
+<button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                            Get Tickets
+                        </button>
+</div>
+</div>
+<div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+<div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+<img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcZaxM7CPZsGjf5ymG8BWpQ6Q4yHkYqahhp6pClirniW8umDRX1VXz_XFIYIH3P2zWEcYObmJxhYxQfCbojTVis4bE-yZUWHVklea79N7u2V7fNg8p1BCY7PbSyGSmqdWogYwXXqRMIqxZ3s-X_RtOaIcdBiuVxtyCj5mslDptVavJj_kpWOrz81cfrFJFqQTu5ApLszuVI5SipF9-N1kekevWcX3nSxCOR6sC3ySdQbHkgk0EVzekPOFThw5pfOCccmk_KHB16do"/>
+<div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                            Oct 29
+                        </div>
+</div>
+<div class="px-2">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold">Vibe Check</h3>
+<span class="text-primary font-bold">Free</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Lo-fi / Chill Hop</p>
+<button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                            Remind Me
+                        </button>
+</div>
+</div>
+<div class="group glass rounded-[2rem] p-4 neon-border transition-all duration-300">
+<div class="relative aspect-square rounded-2xl overflow-hidden mb-6">
+<img alt="Artist" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6MBW5GACrwidixDLkeE6Dk13D0EZnLTB2I8peM7-wHzXUhFV6ouLKKxkTebPkAnMaQHxroRYnpGjft2aFn9PUnOMg7NaNJHnvZjN5AcmKQw3MoQEfLqc8WjG_gK3dj--fXqNjWRvlGK1PD4E1QETki4i0lQPWFytH9acaLRfSUAW5yV3aSGYWrLPtUgO7nkNhdO90CWs9eZZzFjYeyekbY0mj431o8S5Qsqfvr0B9bWGjfAyVFMZNowjq4AceAHV7icCsmxHStHo"/>
+<div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter">
+                            Nov 05
+                        </div>
+</div>
+<div class="px-2">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold">Static Pulse</h3>
+<span class="text-primary font-bold">$45.00</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Techno / Industrial</p>
+<button class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white/10 hover:bg-primary dark:hover:bg-primary text-white font-bold text-xs uppercase tracking-widest transition-colors">
+                            Get Tickets
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<section class="mt-32">
+<div class="bg-indigo-600 rounded-[3rem] p-12 relative overflow-hidden text-center md:text-left">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-pink-500/20 to-transparent"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-xl">
+<h2 class="text-4xl font-black text-white mb-4">Never Miss a Beat.</h2>
+<p class="text-indigo-100 text-lg">Join the AURA Inner Circle. Get early access to tickets, exclusive merch, and backstage virtual passes.</p>
+</div>
+<div class="flex w-full md:w-auto items-center glass p-2 rounded-2xl">
+<input class="bg-transparent border-none focus:ring-0 text-white placeholder-indigo-200 px-6 w-full md:w-64" placeholder="your@email.com" type="email"/>
+<button class="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-indigo-50 transition-colors">Subscribe</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 glass rounded-2xl p-3 flex items-center gap-6 shadow-2xl z-50 border border-white/20">
+<div class="flex items-center gap-4">
+<img alt="Now Playing" class="w-12 h-12 rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZrDDGpMoy5FEX6TxMYxNm5N3bGvOjmah8XuUjXZVtUXZVWxwncdpD9ewhPqf-8duhz6vixU_U2Wf1E9vFgg6Ur9HlZHNeIHNc-6SCG0RmSYSihs5cFZHJL4MyscbkRhKnjc0IpGKl24dlBqsV873ntog2heZWuvYa9Syl1b8h_MkIAtzle5E259L7JEbae1K7VbgCLyw7yGzSt0ChJ8CUtvNEu8cql0nFYji0ppSvyA4Zh-IuBMXxHp09UXpPfMf5gzENKviG9BE"/>
+<div class="hidden sm:block">
+<h4 class="text-sm font-bold truncate w-32">Neon Dreams</h4>
+<p class="text-[10px] uppercase tracking-tighter text-slate-400">Synthwave Collective</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-icons text-slate-400 hover:text-white transition-colors">skip_previous</button>
+<button class="w-10 h-10 bg-white text-indigo-900 rounded-full flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-icons">play_arrow</span>
+</button>
+<button class="material-icons text-slate-400 hover:text-white transition-colors">skip_next</button>
+</div>
+<div class="hidden lg:flex items-center gap-3 pr-4 border-l border-white/10 ml-2 pl-6">
+<span class="material-icons text-slate-400 text-sm">volume_up</span>
+<div class="w-24 h-1 bg-white/10 rounded-full relative">
+<div class="absolute top-0 left-0 h-full w-2/3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<footer class="border-t border-slate-200 dark:border-white/5 py-12 px-8 bg-slate-50 dark:bg-black/20">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-slate-900 dark:bg-slate-100 rounded-lg flex items-center justify-center">
+<span class="material-icons text-white dark:text-indigo-600 text-sm">north</span>
+</div>
+<span class="font-bold tracking-tighter uppercase text-sm">AURA STREAMING</span>
+</div>
+<div class="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Contact</a>
+<a class="hover:text-primary transition-colors" href="#">Artists</a>
+</div>
+<p class="text-xs text-slate-400 font-medium">© 2024 Aura Music Group. All rights reserved.</p>
+</div>
+</footer>
+
+</body></html>

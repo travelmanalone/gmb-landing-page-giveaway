@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura - Premium Subscription Plans</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#8B5CF6",
+              "background-light": "#f8fafc",
+              "background-dark": "#0a0118",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .dark .glass {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .light .glass {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .glow-gold {
+            box-shadow: 0 0 40px -10px rgba(234, 179, 8, 0.3);
+        }
+        .aura-gradient {
+            background: radial-gradient(circle at 0% 0%, #1e1b4b 0%, #0a0118 50%, #1e1b4b 100%);
+        }
+        .flare {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white transition-colors duration-300 min-h-screen overflow-x-hidden">
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="flare top-[-10%] left-[-10%]"></div>
+<div class="flare bottom-[-10%] right-[-10%] opacity-50"></div>
+<div class="absolute inset-0 aura-gradient opacity-60 dark:opacity-100"></div>
+</div>
+<nav class="relative z-10 container mx-auto px-6 py-8 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+<span class="material-icons text-background-dark font-bold">arrow_upward</span>
+</div>
+<span class="text-2xl font-black tracking-tighter uppercase">Aura</span>
+</div>
+<div class="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Discover</a>
+<a class="hover:text-primary transition-colors" href="#">Live Shows</a>
+<a class="hover:text-primary transition-colors" href="#">Library</a>
+<a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1" href="#">Premium</a>
+</div>
+<button class="border border-slate-300 dark:border-slate-700 px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+            Sign In
+        </button>
+</nav>
+<main class="relative z-10 container mx-auto px-6 pt-16 pb-24">
+<div class="max-w-4xl mx-auto text-center mb-20">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass mb-8">
+<span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-blue-400">Limited Time Offer</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6">
+                HEAR THE <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">DIFFERENCE.</span>
+</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto font-medium">
+                Choose the plan that fits your frequency. High-fidelity audio, spatial sound, and zero interruptions.
+            </p>
+</div>
+<div class="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+<div class="glass p-8 rounded-[2rem] flex flex-col group hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-500">
+<div class="mb-8">
+<h3 class="text-xl font-bold mb-2">Basic</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-black">$9.99</span>
+<span class="text-slate-500 font-medium">/mo</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>Ad-free listening</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>Standard audio quality</span>
+</li>
+<li class="flex items-center gap-3 text-sm text-slate-500">
+<span class="material-icons text-slate-700 text-lg">radio_button_unchecked</span>
+<span>1 Account</span>
+</li>
+<li class="flex items-center gap-3 text-sm text-slate-500">
+<span class="material-icons text-slate-700 text-lg">radio_button_unchecked</span>
+<span>No offline downloads</span>
+</li>
+</ul>
+<button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase glass hover:bg-slate-200 dark:hover:bg-slate-800 transition-all">
+                    Start Basic
+                </button>
+</div>
+<div class="glass p-8 rounded-[2rem] flex flex-col relative glow-gold border-yellow-500/30 scale-105 z-10 bg-gradient-to-b from-white/[0.05] to-transparent">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-black tracking-widest uppercase px-6 py-1.5 rounded-full">
+                    Most Popular
+                </div>
+<div class="mb-8">
+<h3 class="text-xl font-bold mb-2 text-yellow-500">Pro</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-black">$14.99</span>
+<span class="text-slate-500 font-medium">/mo</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-yellow-500 text-lg">check_circle</span>
+<span class="font-semibold">Hi-Fi Lossless Audio</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-yellow-500 text-lg">check_circle</span>
+<span>Spatial Audio 2.0</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-yellow-500 text-lg">check_circle</span>
+<span>Offline Downloads</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-yellow-500 text-lg">check_circle</span>
+<span>Ad-free everywhere</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-yellow-500 text-lg">check_circle</span>
+<span>Exclusive Live Access</span>
+</li>
+</ul>
+<button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase bg-primary text-white hover:opacity-90 transition-all shadow-lg shadow-primary/25">
+                    Go Pro Now
+                </button>
+</div>
+<div class="glass p-8 rounded-[2rem] flex flex-col group hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-500">
+<div class="mb-8">
+<h3 class="text-xl font-bold mb-2">Family</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-black">$19.99</span>
+<span class="text-slate-500 font-medium">/mo</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span class="font-semibold">Up to 6 accounts</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>Aura Kids app access</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>Shared Family Mix</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>Explicit Content Filter</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-icons text-primary text-lg">check_circle</span>
+<span>All Pro features</span>
+</li>
+</ul>
+<button class="w-full py-4 rounded-xl font-bold text-sm tracking-widest uppercase glass hover:bg-slate-200 dark:hover:bg-slate-800 transition-all">
+                    Start Family
+                </button>
+</div>
+</div>
+<div class="mt-32 max-w-3xl mx-auto text-center">
+<p class="text-slate-500 dark:text-slate-500 text-sm font-medium italic">
+                All plans include a 30-day free trial for new members. No commitments, cancel anytime.
+            </p>
+<div class="mt-12 flex flex-wrap justify-center gap-8 opacity-40 grayscale">
+<img alt="Visa Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVQOCJQNAdeAODzMa9t9eC9DEvdUOrKZYPjOksgy--fXhoGfElks2jIc3Qzc1qyko68KFeR6v6r1sEt_DyrC2x7z0bb14z_1--RcMgZ7p3MMoggvAvYwLHjnCj8_IKK8et1PQPyapzxvFm0VFm0B_H-tA_2AxD29HSKsbouvqx2sl8roWyq61n0GkkiJdnftAHyEMTgR6o4NiRqldUgMQ3c1woa_5d0tMAnPS5_8hQXaIl-SSYDebvDHMsvmVvi6C_EHvqBiOUd9g"/>
+<img alt="Mastercard Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpbKOrtiq4KELg_3nKvioqTvJhMgvuKtRNieGTdJj5AIQ4U1TgpHAcz21MCga4vprOtmSRrY46zJmsUnhv5Nc2a5FeXPwB_rGquzkKZshsrv5ueZgO849IXQ1awemINVVk1Zwb7hnQB3HvhpicRClexoZGAjI2LkSLSAQTmSx9Fs_gjXW9kzacH5ieILIsFLecNX0vWJ2-NpCBmGwKaF6R048HqGGFMMhh0ncyDQshZTR0rDpN1cRDHlWbhxsMzpiO3NtsumQ8nCs"/>
+<img alt="Paypal Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChTMT17uwxt0Sca8j0Ztz4HD3wf5Do1Co0-AW6ovXK6DnHKLtaWo0B9iQ9W9CnYqvvQhcapVPhjHlsPXrJFcgu6takXe-A40NY-u7Xx_lhgHXeng5TZCwDSQWeM1H2kWyKTk5ZB4c8l-lA1YDfXmbZ00MNzQGv8CrBeCaZ4aELgPsk5FCQqHHyEIOYK0jDh88nEf1sMXOvOnHlksYvSVdWLXEoalYXc5qjq8TJw3QWkAmrIkZ0Uwfiq9o1Z2Niyn6CHsCQA4yCgos"/>
+<img alt="Apple Pay Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGxRvgquPQ91UYxReppGop636c_JA-IjDZwilmv9FCUucRENQfPnOBCXOO_211c7lzqlpNVDzYk0tFQvp4Jeea0erAVGk-njTz7_ugUwEjV_yNnv17nZN6ht55ZlA85HXuSr8VBJ-ovj7NO7pDNXwsSUgTakKwKg2OjgtwvD78WXvhfOh3vni2bie58NelaYEdk6NapyR47eoxCXq7yzJuDQLLFJ_KEVt5xzjoWYVUX0yA3RoWJ4ZadiGL6vAnIc6iV9PCZELHJMc"/>
+</div>
+</div>
+</main>
+<footer class="relative z-10 border-t border-slate-200 dark:border-slate-800 py-12">
+<div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3 opacity-50">
+<div class="w-6 h-6 bg-slate-900 dark:bg-white rounded-full flex items-center justify-center">
+<span class="material-icons text-white dark:text-slate-900 text-[10px] font-bold">arrow_upward</span>
+</div>
+<span class="text-sm font-black tracking-tighter uppercase">Aura</span>
+</div>
+<div class="flex gap-8 text-[10px] font-bold tracking-widest uppercase text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+<div class="text-[10px] text-slate-500 font-medium">
+                © 2024 Aura Music Collective. Built for the sound.
+            </div>
+</div>
+</footer>
+
+</body></html>
