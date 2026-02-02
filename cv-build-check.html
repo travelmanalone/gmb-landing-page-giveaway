@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildCheck | Independent Property Inspection Vietnam</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bc-navy': '#0f172a', /* Slate 900 - Trust & Authority */
+                        'bc-slate': '#64748b', /* Slate 500 - Technical */
+                        'bc-light': '#f8fafc', /* Slate 50 - Backgrounds */
+                        'bc-amber': '#d97706', /* Amber 600 - Industrial Luxury CTA */
+                    },
+                    fontFamily: {
+                        'heading': ['"Montserrat"', 'sans-serif'],
+                        'body': ['"Open Sans"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2000&auto=format&fit=crop')",
+                        'texture': "url('https://www.transparenttextures.com/patterns/concrete-wall.png')"
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #334155;
+            background-color: #f8fafc;
+        }
+        
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0f172a; }
+
+        /* CTA Button Animation */
+        .btn-primary {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn-primary:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: -2;
+        }
+        .btn-primary:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #b45309; /* Darker Amber */
+            transition: all 0.3s;
+            z-index: -1;
+        }
+        .btn-primary:hover:before { width: 100%; }
+        
+        /* Fade Up */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* NEW EFFECTS ADDED BELOW */
+
+        /* 1. Floating Animation for Report */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+            100% { transform: translateY(0px) rotate(-3deg); }
+        }
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* 2. Shine Effect for Buttons */
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        .btn-shine:hover::after {
+            left: 100%;
+            transition: 0.7s ease-in-out;
+        }
+
+        /* 3. Hover Lift Card */
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-bc-amber text-bc-navy flex items-center justify-center font-bold text-xl rounded-sm transition-transform group-hover:rotate-12">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div class="text-white font-heading font-bold text-2xl tracking-tight">
+                    BUILD<span class="text-bc-amber">CHECK</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#problem" class="text-gray-300 hover:text-white font-medium text-sm uppercase tracking-wide transition relative group">
+                    The Risks
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-bc-amber transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#services" class="text-gray-300 hover:text-white font-medium text-sm uppercase tracking-wide transition relative group">
+                    Services
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-bc-amber transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#process" class="text-gray-300 hover:text-white font-medium text-sm uppercase tracking-wide transition relative group">
+                    Process
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-bc-amber transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="px-5 py-2 border border-bc-amber text-bc-amber hover:bg-bc-amber hover:text-white transition font-bold text-sm uppercase tracking-wider">Book Consultation</a>
+            </div>
+
+            <!-- Mobile Menu Icon -->
+            <button class="md:hidden text-white text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="h-screen flex items-center bg-hero-pattern bg-cover bg-center bg-fixed relative">
+        <div class="max-w-7xl mx-auto px-6 w-full relative z-10 pt-16">
+            <div class="max-w-3xl fade-up">
+                <div class="inline-block px-3 py-1 bg-bc-amber/20 border border-bc-amber/50 text-bc-amber text-xs font-bold uppercase tracking-widest mb-6 rounded-sm backdrop-blur-sm">
+                    Premium Oversight for International Investors
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl text-white font-bold leading-tight mb-6 font-heading">
+                    Protect Your Vietnam Property Investment From <span class="text-bc-amber">Hidden Defects.</span>
+                </h1>
+                <p class="text-gray-300 text-lg md:text-xl mb-10 leading-relaxed max-w-2xl font-light">
+                    Independent construction oversight and snagging services in Central Vietnam. We ensure your project is delivered on-time, on-budget, and rework-free.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#report" class="btn-primary btn-shine bg-bc-amber text-white px-8 py-4 font-bold uppercase tracking-wide text-center shadow-lg shadow-bc-amber/20 hover:shadow-bc-amber/40 rounded-sm">
+                        Get a Sample Report
+                    </a>
+                    <a href="#contact" class="px-8 py-4 bg-transparent border border-white text-white hover:bg-white hover:text-bc-navy transition font-bold uppercase tracking-wide text-center rounded-sm">
+                        Book a Consultation
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trust Indicators at Bottom of Hero -->
+        <div class="absolute bottom-0 w-full bg-bc-navy/90 border-t border-white/10 backdrop-blur-md py-6">
+            <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center md:justify-between items-center gap-6 text-gray-400 text-sm font-semibold uppercase tracking-widest">
+                <span><i class="fas fa-map-marker-alt text-bc-amber mr-2"></i> Serving Da Nang</span>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <span><i class="fas fa-map-marker-alt text-bc-amber mr-2"></i> Hoi An</span>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <span><i class="fas fa-map-marker-alt text-bc-amber mr-2"></i> Lang Co</span>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <span class="text-white"><i class="fas fa-shield-alt text-bc-amber mr-2"></i> 100% Independent</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Pain Point Section -->
+    <section id="problem" class="py-24 bg-bc-light">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-bc-navy mb-4">What Happens When You're Not On-Site?</h2>
+                <p class="text-bc-slate max-w-2xl mx-auto">Distance is the biggest risk in construction. Without an independent eye, minor oversights become major financial liabilities.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white p-8 hover-card border-t-4 border-bc-slate hover:border-bc-amber fade-up">
+                    <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-2xl text-bc-navy transition-colors group-hover:bg-bc-amber/10">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-bc-navy mb-3 font-heading">Subpar Materials</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Contractors may swap specified premium materials for cheaper alternatives when no one is checking the receipts and intake.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-8 hover-card border-t-4 border-bc-slate hover:border-bc-amber fade-up" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-2xl text-bc-navy">
+                        <i class="fas fa-drafting-compass"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-bc-navy mb-3 font-heading">Design Deviations</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Changes made on-site without approval that affect the aesthetics, structural integrity, or value of your property.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-8 hover-card border-t-4 border-bc-slate hover:border-bc-amber fade-up" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-2xl text-bc-navy">
+                        <i class="fas fa-search-dollar"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-bc-navy mb-3 font-heading">Hidden Defects</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Waterproofing failures, electrical grounding issues, and hollow tiles—problems that only appear after you've paid the final installment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Solution / Value Prop -->
+    <section class="py-24 bg-bc-navy text-white relative overflow-hidden">
+        <!-- Texture Overlay -->
+        <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="fade-up">
+                <div class="text-bc-amber font-bold uppercase tracking-widest text-sm mb-4">The BuildCheck Edge</div>
+                <h2 class="text-3xl md:text-5xl font-heading font-bold mb-6 leading-tight">Your Eyes and Ears on the Ground.</h2>
+                <p class="text-gray-400 mb-6 leading-relaxed">
+                    We are **100% Neutral**. We do not receive commissions from contractors, and we do not sell real estate. Our only loyalty is to you, the owner.
+                </p>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-bc-amber mt-1 mr-3"></i>
+                        <span class="text-gray-300">Detailed photographic evidence for every claim.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-bc-amber mt-1 mr-3"></i>
+                        <span class="text-gray-300">Bilingual reporting (English/Vietnamese) to bridge the gap with local teams.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-bc-amber mt-1 mr-3"></i>
+                        <span class="text-gray-300">Certified Western standards applied to Vietnamese context.</span>
+                    </li>
+                </ul>
+                <div class="flex items-center gap-4">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Stuart" class="w-12 h-12 rounded-full border-2 border-bc-amber hover:scale-110 transition duration-300 cursor-pointer">
+                    <div>
+                        <div class="font-bold text-white">Stuart M.</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wide">Lead Inspector</div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative fade-up">
+                <!-- Image Frame -->
+                <div class="border-2 border-bc-amber p-2 relative">
+                    <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1000&auto=format&fit=crop" alt="Construction Inspection" class="w-full grayscale hover:grayscale-0 transition duration-500">
+                    <!-- Floating Stat -->
+                    <div class="absolute -bottom-6 -left-6 bg-white text-bc-navy p-6 shadow-xl hidden md:block border-l-4 border-bc-amber">
+                        <div class="text-3xl font-bold font-heading flex">
+                            <span class="counter" data-target="200">0</span>+
+                        </div>
+                        <div class="text-xs uppercase font-bold tracking-widest text-bc-slate">Checkpoints per visit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 bg-bc-light">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-bc-navy">Comprehensive Services</h2>
+                <div class="w-20 h-1 bg-bc-amber mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 group hover:bg-bc-navy hover:text-white hover-card shadow-sm border border-gray-200 fade-up">
+                    <i class="fas fa-clipboard-list text-4xl text-bc-slate group-hover:text-bc-amber mb-6 transition"></i>
+                    <h3 class="text-xl font-bold mb-3 font-heading group-hover:text-white">Snagging Lists</h3>
+                    <p class="text-gray-500 text-sm group-hover:text-gray-300">
+                        The final deep-dive inspection before you accept handover. We check finishing, electrical, plumbing, and aesthetic details to ensure you don't inherit someone else's mistakes.
+                    </p>
+                </div>
+                <!-- Service 2 -->
+                <div class="bg-white p-8 group hover:bg-bc-navy hover:text-white hover-card shadow-sm border border-gray-200 fade-up">
+                    <i class="fas fa-file-contract text-4xl text-bc-slate group-hover:text-bc-amber mb-6 transition"></i>
+                    <h3 class="text-xl font-bold mb-3 font-heading group-hover:text-white">Defect Reporting</h3>
+                    <p class="text-gray-500 text-sm group-hover:text-gray-300">
+                        Technical reports clearly documenting structural or installation faults. We provide the "ammunition" you need to hold developers accountable.
+                    </p>
+                </div>
+                <!-- Service 3 -->
+                <div class="bg-white p-8 group hover:bg-bc-navy hover:text-white hover-card shadow-sm border border-gray-200 fade-up">
+                    <i class="fas fa-hard-hat text-4xl text-bc-slate group-hover:text-bc-amber mb-6 transition"></i>
+                    <h3 class="text-xl font-bold mb-3 font-heading group-hover:text-white">Ongoing Oversight</h3>
+                    <p class="text-gray-500 text-sm group-hover:text-gray-300">
+                        Weekly or monthly site visits during the construction phase. We catch corners being cut *before* the concrete is poured and the walls are sealed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Process -->
+    <section id="process" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div class="fade-up">
+                    <h2 class="text-3xl md:text-4xl font-heading font-bold text-bc-navy mb-8">How We Work</h2>
+                    <div class="space-y-8">
+                        <div class="flex group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-bc-navy text-white flex items-center justify-center font-bold group-hover:bg-bc-amber transition">1</div>
+                            <div class="ml-6">
+                                <h4 class="text-lg font-bold text-bc-navy">Consultation & Quote</h4>
+                                <p class="text-gray-500 text-sm mt-1">We review your floor plans and property details to provide a transparent, fixed-price quote.</p>
+                            </div>
+                        </div>
+                        <div class="flex group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-bc-navy text-white flex items-center justify-center font-bold group-hover:bg-bc-amber transition">2</div>
+                            <div class="ml-6">
+                                <h4 class="text-lg font-bold text-bc-navy">On-Site Inspection</h4>
+                                <p class="text-gray-500 text-sm mt-1">Our team visits the property, utilizing professional tools (thermal cameras, moisture meters) to inspect 200+ points.</p>
+                            </div>
+                        </div>
+                        <div class="flex group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-bc-amber text-bc-navy flex items-center justify-center font-bold">3</div>
+                            <div class="ml-6">
+                                <h4 class="text-lg font-bold text-bc-navy">Report & Resolution</h4>
+                                <p class="text-gray-500 text-sm mt-1">You receive a digital PDF report within 24 hours. We can also communicate directly with your developer to explain the fixes required.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-8 border border-gray-200 fade-up hover-card">
+                    <h3 class="text-xl font-bold text-bc-navy mb-4 font-heading">Recent Find in Da Nang</h3>
+                    <img src="https://images.unsplash.com/photo-1582283084728-f14d87213214?q=80&w=800&auto=format&fit=crop" class="w-full h-48 object-cover mb-4 grayscale" alt="Defect Example">
+                    <p class="text-xs text-gray-500 italic mb-4">"Improper waterproofing in the master bathroom. Detected via moisture meter before tiles were laid. Saved the client approx $3,500 in future repairs."</p>
+                    <div class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded">Status: Fixed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Magnet Section -->
+    <section id="report" class="py-20 bg-bc-navy relative">
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="bg-bc-slate/10 border border-white/10 rounded-lg p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 backdrop-blur-sm fade-up">
+                <!-- Visual Representation of Report -->
+                <div class="w-full md:w-1/3 flex justify-center">
+                    <!-- Added 'floating-element' class here -->
+                    <div class="floating-element w-48 h-64 bg-white shadow-2xl relative transform -rotate-3 hover:rotate-0 transition duration-500 flex flex-col items-center pt-8 cursor-pointer">
+                        <div class="w-32 h-2 bg-bc-navy mb-2"></div>
+                        <div class="w-32 h-2 bg-gray-200 mb-1"></div>
+                        <div class="w-32 h-2 bg-gray-200 mb-4"></div>
+                        <div class="text-center mt-4">
+                            <i class="fas fa-file-pdf text-4xl text-red-600"></i>
+                            <div class="text-xs font-bold mt-2 text-bc-navy">SAMPLE SNAGGING<br>REPORT 2024</div>
+                        </div>
+                        <div class="absolute bottom-0 w-full h-2 bg-bc-amber"></div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="w-full md:w-2/3 text-center md:text-left">
+                    <h2 class="text-2xl md:text-3xl font-heading font-bold text-white mb-4">See What A Professional Inspection Looks Like</h2>
+                    <p class="text-gray-300 mb-8 text-sm">Download our anonymous Sample Snagging Report to understand the level of detail we cover. Don't settle for a generic "walkthrough".</p>
+                    
+                    <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault(); alert('Sample Report sent to your email!');">
+                        <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-4 bg-bc-navy border border-gray-600 text-white focus:outline-none focus:border-bc-amber placeholder-gray-500" required>
+                        <button type="submit" class="btn-shine bg-bc-amber text-white px-8 py-4 font-bold uppercase tracking-wide hover:bg-white hover:text-bc-navy transition">
+                            Download Now
+                        </button>
+                    </form>
+                    <p class="text-gray-500 text-xs mt-4"><i class="fas fa-lock mr-1"></i> Your email is safe with us. No spam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <i class="fas fa-quote-left text-4xl text-bc-slate/20 mb-6"></i>
+            <h3 class="text-xl md:text-2xl font-serif italic text-bc-navy mb-8 leading-relaxed">
+                "Living in Australia, I was worried about the progress of my villa in Hoi An. BuildCheck gave me complete peace of mind. The report they sent was more detailed than I expected, and they forced the developer to fix 15 issues I would never have noticed."
+            </h3>
+            <div class="flex items-center justify-center gap-4">
+                <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Client" class="w-full h-full object-cover">
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-bc-navy">David Nguyen</div>
+                    <div class="text-xs text-gray-500 uppercase">Property Investor, Sydney</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-16 bg-bc-light">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-bc-navy mb-8 text-center font-heading">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <details class="group bg-white border border-gray-200 p-4 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-bc-navy list-none">
+                        How much does an inspection cost?
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+                        Pricing depends on the property type (Apartment vs. Villa) and square footage. Typically, it starts from $200 USD for a standard apartment snagging. Contact us for a precise quote.
+                    </p>
+                </details>
+                <details class="group bg-white border border-gray-200 p-4 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-bc-navy list-none">
+                        Can you fix the defects for me?
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+                        We are strictly an inspection and oversight firm. This maintains our neutrality. However, we oversee the repairs done by your contractor to ensure they are done correctly.
+                    </p>
+                </details>
+                <details class="group bg-white border border-gray-200 p-4 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-bc-navy list-none">
+                        Do you travel outside of Da Nang?
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+                        Yes, we cover the greater Central Vietnam area including Hue, Lang Co, Da Nang, and Hoi An.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-bc-navy text-white py-16 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="md:col-span-2">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 bg-bc-amber text-bc-navy flex items-center justify-center font-bold text-lg rounded-sm">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="font-heading font-bold text-xl tracking-tight">BUILDCHECK</div>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-sm mb-6">
+                    Professional, independent construction oversight for international investors in Vietnam. We protect your assets from the ground up.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-sm tracking-wider">Contact</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><i class="fas fa-envelope mr-2 text-bc-amber"></i> hello@buildcheck.vn</li>
+                    <li><i class="fas fa-phone mr-2 text-bc-amber"></i> +84 905 123 456</li>
+                    <li><i class="fas fa-map-marker-alt mr-2 text-bc-amber"></i> Son Tra, Da Nang, Vietnam</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-sm tracking-wider">Legal</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-bc-amber">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-bc-amber">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-bc-amber">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 text-center md:text-left text-xs text-gray-600 flex flex-col md:flex-row justify-between">
+            <p>© 2024 BuildCheck Vietnam. All rights reserved.</p>
+            <p>Designed for Trust.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-bc-navy', 'shadow-lg', 'py-3');
+                navbar.classList.remove('bg-transparent', 'py-4');
+            } else {
+                navbar.classList.add('bg-transparent', 'py-4');
+                navbar.classList.remove('bg-bc-navy', 'shadow-lg', 'py-3');
+            }
+        });
+
+        // Intersection Observer for Fade Up animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+        // NEW: Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // The lower the slower
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / 100; // Adjusted speed
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Trigger counter only once when visible
+        let counterTriggered = false;
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !counterTriggered) {
+                    animateCounters();
+                    counterTriggered = true;
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observe the section containing the counter (or the counter itself)
+        const counterElement = document.querySelector('.counter');
+        if(counterElement) {
+             counterObserver.observe(counterElement.parentElement);
+        }
+       
+    </script>
+</body>
+</html>
